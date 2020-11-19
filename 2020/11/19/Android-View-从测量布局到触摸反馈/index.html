@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/Blog/img/favicon.png">
+  <link rel="icon" type="image/png" href="/Blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>Android View 从测量布局到触摸反馈 - ZEKI SPACE</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/Blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/Blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"github.com","root":"/Blog/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/Blog/js/utils.js" ></script>
+  <script  src="/Blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/Blog/">&nbsp;<strong>安卓学弟 ZEKI</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/Blog/img/bg/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Android View 从测量布局到触摸反馈">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-19 16:14" pubdate>
+        2020年11月19日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      42
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Android View 从测量布局到触摸反馈</h1>
+            
+            <div class="markdown-body">
+              <p>#自定义View</p>
+<blockquote>
+<p>在Android开发中，自定义 View 最关键的有三个点：绘制、布局和触摸反馈(绘制内容多而简单，查看手册即用即学，这里不记录了)</p>
+</blockquote>
+<p>#布局</p>
+<blockquote>
+<ul>
+<li>测量阶段 ：从上到下<code>递归</code>地调用每个 <code>View</code> 或者 <code>ViewGroup</code> 的 <code>measure() </code>方法，测量他们的尺寸并计算它们的位置</li>
+<li>布局阶段：从上到下<code>递归</code>地调用a每个 <code>View</code> 或者 <code>ViewGroup</code> 的 <code>layout() </code>方法，把测得的它们的尺寸和位置赋值给它们<br>#####测量阶段</li>
+</ul>
+</blockquote>
+<ul>
+<li><code>measure()</code> 方法被父<code>View</code>调用，在 <code>measure() </code>中做一些准备和优化工作后，调用 <code>onMeasure() </code>来进行实际的自我测量</li>
+</ul>
+<blockquote>
+<ul>
+<li>View：<code>View</code> 在 <code>onMeasure()</code> 中会计算出自己的尺寸然后保存</li>
+<li>ViewGroup：<code>ViewGroup</code> 在 <code>onMeasure() </code>中会调用所有<code>子 View </code>的 <code>measure() </code>让它们进行自我测量，并根据<code>子 View</code> 计算出的期望尺寸来计算出它们的实际尺寸和位置然后保存。同时，它也会根据<code>子 View </code>的<code>尺寸</code>和<code>位置</code>来计算出自己的尺寸然后保存<br>注：保存会调用<code>setMeasuredDimension(int,int)</code>，可通过<code>getMeasuredWidth()</code>和<code>getMeasuredHeight()</code>获取保存的值<br>#####布局阶段</li>
+</ul>
+</blockquote>
+<ul>
+<li><code>layout() </code>方法被父 <code>View</code> 调用，在<code>layout()</code> 中它会保存父 <code>View</code> 传进来的自己的位置和尺寸，并且调用 <code>onLayout()</code> 来进行实际的内部布局</li>
+</ul>
+<blockquote>
+<ul>
+<li>View：由于没有子 View，所以 <code>View</code> 的 <code>onLayout() </code>什么也不做</li>
+<li>ViewGroup：<code>ViewGroup</code> 在 <code>onLayout() </code>中会调用自己的所有<code>子 View </code>的<code>layout()</code>方法，把它们的尺寸和位置传给它们（layout方法中会有参数，即实际让子View布局的尺寸参数），让它们完成自我的内部布局<br>下面给出示意图：<br><img src="https://upload-images.jianshu.io/upload_images/17794320-5e90050757f139b4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif" alt="View布局过程.png"><br><img src="https://upload-images.jianshu.io/upload_images/17794320-30a25832259b0599.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif" alt="ViewGroup布局过程.png"></li>
+</ul>
+</blockquote>
+<p>了解上面的测量布局过程之后，我们很容易地想到以下3种自定义布局过程<br>##自定义布局过程</p>
+<ul>
+<li>重写 <code>onMeasure()</code> 来修改已有的 <code>View</code> 的尺寸(先调用<code>super.onMeasure()</code>)</li>
+<li>重写 <code>onMeasure()</code> 来全新定制自定义 <code>View</code> 的尺寸（不用<code>super.onMeasure()</code>）</li>
+<li>重写 <code>onMeasure()</code> 和 <code>onLayout()</code> 来全新定制自定义 <code>ViewGroup</code> 的内部布局<br>######第一种（修改已有尺寸）<br>1.重写 <code>onMeasure() </code>方法，并在里面调用 super.onMeasure()，触发原有的自我测量<br>2.<code>super.onMeasure()</code>的下面用<code>getMeasuredWidth()</code>和 <code>getMeasuredHeight() </code>来获取到之前的测量结果(宽和高)，并加上自己的代码，根据测量结果计算出新的结果</li>
+</ul>
+<blockquote>
+<p><code>getMeasuredWidth()</code> 和 <code>getMeasuredHeight()</code> 是测得的尺寸（即<code>View</code>在<code>onMeasure</code>中调用<code>setMeasureDimension()</code>保存下来的数据）未必与之后<code>父View</code>调用<code>layout()</code>时传递进来的的尺寸参数相等，具体值是由父View决定！</p>
+</blockquote>
+<p>3.使用<code>setMeasureDimension()</code>保存自定义测量的尺寸值</p>
+<p>######第二种（完全自己计算尺寸）<br>1.重写<code>onMeasure()</code>，计算尺寸(自己计算图、文字等等的长宽作加法运算)<br>2.把计算结果用<code>resolveSize()</code>修正一下<br>3.使用<code>setMeasureDimension()</code>保存自定义测量的尺寸值（也可以自己实现方法来满足父View的限制）</p>
+<blockquote>
+<p>在<code>onMeasure()</code>中有两个参数<code>widthMeasureSpec</code>和<code>heightMeasureSpec</code>，它们是<code>父View</code>对<code>子View</code>的测量尺寸的限制，来源于<code>xml</code>中以<code>layout_</code>打头的属性参数,这两个属性各自可以被<code>MeasureSpec.getMode</code>和<code>MeasureSpec.getSize</code>拆分为<code>Mode</code>和<code>SIZE</code><br><code>Mode</code>是限制的类型，包含3种：无限制<code>UNSPECIFIED</code>、限制上限<code>AT_MOST</code>、限制固定值<code>EXACTLY</code><br><code>View</code>为我们提供了<code>resolveSize()</code>方法用来便捷地对应这种限制<br><img src="https://upload-images.jianshu.io/upload_images/17794320-7547d490758465b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif"><br><img src="https://upload-images.jianshu.io/upload_images/17794320-9ab7c57672402505.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif"><br>######第三种（ViewGroup自定义测量以及布局过程）<br>1.重写<code>onMeasure()</code>来计算内部布局</p>
+<ul>
+<li>调用每个子View的measure, 让<code>子View</code>自我测量</li>
+<li>根据子View给出的尺寸，得到子View的位置，并保存它们的位置和尺寸</li>
+<li>根据子View的位置和尺寸计算出自己的尺寸并用setMeasuredDimension()保存</li>
+</ul>
+</blockquote>
+<p>2.重写<code>onLayout()</code>来摆放<code>子View</code></p>
+<ul>
+<li>在<code>onMeasure()</code>中，需要根据<code>ViewGroup</code>自身的 <strong>可用空间</strong> 结合<code>子View</code>的<code>layout_</code>打头的属性去测量每个<code>子View</code>的尺寸，并且用  <code>MeasureSpec.makeMeasureSpec()</code> 压缩成<code>MeasureSpec(子View的可用空间)</code>并保存</li>
+<li><code>layout_</code>打头的属性：这类属性是<code>子View</code>提供给<code>父View</code>测量时用的，在Java代码中可以通过<code>view.getLayoutParam()</code>获得。全新自定义<code>ViewGroup</code>时只有 <code>layout_width</code>和<code>layout_height</code> ，开发者可以继续自定义这类属性例如<code>layout_gravity</code>，在自定义测量过程时将其考虑进去即可</li>
+<li>可用空间：对于<code>ViewGroup</code>本身来说最初的可用空间是<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>的参数，而在往<code>子View</code>分配可用空间时，我们可以自己制定规则，可以将<code>widthMeasureSpec</code>和<code>heightMeasureSpec</code>直接作为第一个<code>子View</code>的 <strong>可用空间</strong>，也可以自己做一些删减。当第一个<code>子View</code>的测量完成,继续测量第二个<code>子View</code>的时候，需要在<code>widthMeasureSpec</code>或者<code>heightMeasureSpec</code>基础上将第一个<code>子View</code>的 <strong>已用空间</strong> 减去,就得到了第二个<code>子View</code>的可用空间，以此类推</li>
+<li>可用空间判断方法(通用方式，有特例)：</li>
+</ul>
+<blockquote>
+<p><img src="https://upload-images.jianshu.io/upload_images/17794320-ea767e7316e78492.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif" alt="可用空间判断"><br>首先根据<code>子View</code>在的xml布局声明的<code>layout_width</code>和<code>layout_height</code>(lp.width、lp.height)分两种情况</p>
+</blockquote>
+<ul>
+<li>MATCH_PARENT：<ul>
+<li><code>ViewGroup</code>的限制为<code>EXACTLY</code>或<code>AT_MOST</code>：由于<code>子View</code>依赖<code>父View</code>，<code>父View</code>需要告诉<code>子View</code>其可用宽度，并且<code>ViewGroup</code>本身可用空间可以确定，所以应当给予<code>子View</code>的限制属性是一个具体值，mode为<code>EXACTLY</code>；此处给予 <code>子View</code> 的宽度是可用宽度，不管 父View 是 <code>AT_MOST</code> 还是<code>EXACTLY</code>，两种的原则都是这块空间<code>子View</code>随便用，so <code>子View</code>的可用空间就是当前ViewGroup的初始可用空间（<code>onMeasure()</code>传来的<code>widthMeasureSpec</code>）减去已用空间</li>
+<li><code>ViewGroup</code>的限制为<code>UNSPECIFIED</code>：<code>子View</code>依赖<code>父View</code>，但<code>ViewGroup</code>本身是<code>UNSPECIFIED</code>无限制大小的（这个地方说大小不是很合适，可用空间可能更佳），于是无法计算出<code>子View</code>的可用空间，所以直接将<code>子View</code>的<code>mode</code>也写为<code>UNSPECIFIED</code>,  不限制其可用空间大小。size直接给0，因为在<code>mode</code>为<code>UNSPECIFIED</code>情况下<code>size</code>无意义，实际在高版本Android有意义，这里不做解释</li>
+</ul>
+</li>
+<li>WARP_CONTENT：<ul>
+<li><code>ViewGroup</code>的限制为<code>EXACTLY</code>或<code>AT_MOST</code>：虽然<code>子View</code>是warp_content，子 View自我测量，但却不能直接将<code>UNSPECIFIED</code>给<code>子 View</code>，因为<code>wrap_content</code>有个隐藏条件是不超过<code>父View</code>，so这里给子View的<code>mode</code>是<code>AT_MOST</code>来限制它的最大尺寸；由于<code>ViewGroup</code>的<code>mode</code>为<code>EXACTLY</code>或<code>AT_MOST</code>，我们就可以得到可用空间大小，将其减去已用空间传给<code>子View</code>的可用空间即可(与match_parent时做法类似)</li>
+<li><code>ViewGroup</code>的限制为<code>UNSPECIFIED</code>：同上，<code>子View</code>需要自我测量，隐藏条件不超过<code>父View</code>应当被满足，但由于<code>ViewGroup</code>的限制为<code>UNSPECIFIED</code>，无法给出具体的可用空间大小，于是无法满足开发者在<code>xml</code>中给<code>子View</code>的<code>wrap_content</code>属性，无奈只能传入<code>UNSPECIFIED</code>不对其进行限制，<code>size</code>依旧是0即可</li>
+</ul>
+</li>
+<li>指定值（sp、dp）：直接给<code>子View</code>指定一个值，<code>ViewGroup</code>什么都不用做，直接将值下发给<code>子View</code>的可用空间，<code>mode</code>给<code>EXACTLY</code>即可</li>
+</ul>
+<p>布局过程基本结束，接下来是触摸反馈过程</p>
+<p>#触摸反馈</p>
+<blockquote>
+<p>触摸反馈的本质就是把一系列的<code>触摸事件</code>解读为对应的操作，比如按下、弹起、滑动等等，开发者再根据解读出来的操作进行<code>反馈</code></p>
+</blockquote>
+<p>对于触摸事件，有两点需要注意</p>
+<ul>
+<li><code>触摸事件</code> 不相互独立，它们是成 <code>序列</code> （成组）出现的</li>
+<li>每组事件由 <code>DOWN</code> 开头，由 <code>UP</code> 或 <code>CANCEL</code> 结尾</li>
+</ul>
+<p>大家都知道，自定义触摸反馈只需要重写<code>View</code>的<code>onTouchEvent(MotionEvent event)</code>方法，event中包含了此次触摸事件的<code>事件类型</code>、<code>坐标</code>等其他信息，当触摸事件不断被触发，<code>onTouchEvent()</code>就不断被调用，这是触摸反馈的<code>核心</code>。对于简单的 <strong>自定义触摸反馈</strong>，重写这个方法已经够了，但难免我们会遇上新的问题 —— 滑动冲突，只有当我们了解整个事件分发机制，才能够彻底解决滑动冲突。<br>在Android中，当一个触摸事件产生，<code>MotionEvent</code> 将从 <code>Activity（Window）</code>——&gt;<code>ViewGroup</code>（多个）——&gt; <code>View</code><br> <img src="https://upload-images.jianshu.io/upload_images/17794320-31aa080f30078289.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif"><br>实际上学习Android的触摸事件分发机制就是学习以下3个组件的事件分发机制</p>
+<ul>
+<li><code>Activity</code>对触摸事件的分发机制</li>
+<li><code>ViewGroup</code>对触摸事件的分发机制</li>
+<li><code>View</code>对触摸事件的分发机制</li>
+</ul>
+<p>在Android的事件分发机制中，传递的核心方法有3个：</p>
+<ul>
+<li><code>dispatchTouchEvent()</code>：分发（传递）点击事件，当点击事件能够传递给当前View，该方法就会被调用</li>
+<li><code>onInterceptTouchEvent()</code>：只存在于<code>ViewGroup</code>中，在<code>dispatchTouchEvent()</code>内部被调用，判断是否拦截了某个事件</li>
+<li><code>onTouchEvent()</code>：处理点击事件，在<code>dispatchTouchEvent()</code>内部调用</li>
+</ul>
+<blockquote>
+<p>这三个方法的解释不严谨，目的只是让大家现在有一个关系概念，而不是将每个细节都全理解，之后在源码中会有细节</p>
+</blockquote>
+<p>先上一个粗略的图，大概对事件分发流程有个印象，方便看源码的时候理解</p>
+<p>##Activity的事件分发机制<br>当一个触摸事件发生时，事件最先传到 <code>Activity</code> 的 <code>dispatchTouchEvent()</code></p>
+<pre><code class="hljs csharp">    <span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">dispatchTouchEvent</span>(<span class="hljs-params">MotionEvent ev</span>)</span> &#123;
+        <span class="hljs-keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) 
+            onUserInteraction();
+        &#125;
+    <span class="hljs-comment">//获取Activity的window对象（实现类PhoneWindow）并调用其方法 `superDispatchTouchEvent()`</span>
+        <span class="hljs-keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        &#125;
+    <span class="hljs-comment">//当未被处理，直接调用Activity的 `onTouchEvent()` 处理</span>
+        <span class="hljs-keyword">return</span> onTouchEvent(ev);
+    &#125;
+    
+    <span class="hljs-comment">//空方法，当Activity在栈顶，触摸、按Home、back、menu都会触发该方法</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onUserInteraction</span>(<span class="hljs-params"></span>)</span> &#123;
+    &#125;
+    
+    <span class="hljs-comment">//Window</span>
+    @Override
+    <span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">superDispatchTouchEvent</span>(<span class="hljs-params">MotionEvent <span class="hljs-keyword">event</span></span>) </span>
+<span class="hljs-function">        <span class="hljs-comment">// mDecor = 顶层View（DecorView）的实例对象</span></span>
+<span class="hljs-function">        <span class="hljs-comment">//DecorView是PhoneWindow的内部类，继承自FrameLayout，所以是一个ViewGroup</span></span>
+<span class="hljs-function">        <span class="hljs-keyword">return</span> mDecor.<span class="hljs-title">superDispatchTouchEvent</span>(<span class="hljs-params"><span class="hljs-keyword">event</span></span>)</span>;
+    &#125;
+    
+    <span class="hljs-comment">//DecorView</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">superDispatchTouchEvent</span>(<span class="hljs-params">MotionEvent <span class="hljs-keyword">event</span></span>)</span> &#123;
+        <span class="hljs-comment">// 调用父类的方法 = ViewGroup的dispatchTouchEvent()</span>
+        <span class="hljs-comment">// 即 将事件传递到ViewGroup去处理，详细看ViewGroup的事件分发机制</span>
+        <span class="hljs-keyword">return</span> super.dispatchTouchEvent(<span class="hljs-keyword">event</span>);
+    &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">onTouchEvent</span>(<span class="hljs-params">MotionEvent <span class="hljs-keyword">event</span></span>)</span> &#123;
+        <span class="hljs-comment">// 当一个点击事件未被Activity下任何一个View接收 / 处理时</span>
+        <span class="hljs-comment">// 应用场景：处理发生在Window边界外的触摸事</span>
+        <span class="hljs-keyword">if</span> (mWindow.shouldCloseOnTouch(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">event</span>)) &#123;
+            finish();
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<span class="hljs-comment">//即只有在点击事件在Window边界外才会返回true，一般情况都返回false</span>
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">shouldCloseOnTouch</span>(<span class="hljs-params">Context context, MotionEvent <span class="hljs-keyword">event</span></span>)</span> &#123;
+    <span class="hljs-comment">// 主要是对于处理边界外点击事件的判断：是否是DOWN事件，event的坐标是否在边界内等</span>
+    <span class="hljs-keyword">if</span> (mCloseOnTouchOutside &amp;&amp; <span class="hljs-keyword">event</span>.getAction() == MotionEvent.ACTION_DOWN
+            &amp;&amp; isOutOfBounds(context, <span class="hljs-keyword">event</span>) &amp;&amp; peekDecorView() != <span class="hljs-literal">null</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-comment">// 返回true：说明事件在边界外，即 消费事件</span>
+    <span class="hljs-comment">// 返回false：未消费（默认）</span>
+&#125;
+</code></pre>
+
+<blockquote>
+<p>流程图 <img src="https://upload-images.jianshu.io/upload_images/17794320-73a1692c3d8e588a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif" alt="Activity事件分发流程图"><br>红框中是重点！事件从这里下发到子View/View Group！<br>#ViewGroup事件的分发机制<br>Android 5.0后，ViewGroup.dispatchTouchEvent()的源码发生了变化（更加复杂），但原理相同；<br>为了便于理解，采用Android 5.0前的版本</p>
+</blockquote>
+<pre><code class="hljs aspectj">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">dispatchTouchEvent</span><span class="hljs-params">(MotionEvent ev)</span> </span>&#123; 
+
+    ... <span class="hljs-comment">// 仅贴出关键代码</span>
+
+        <span class="hljs-comment">// ViewGroup每次事件分发时，都需调用onInterceptTouchEvent()询问是否拦截事件</span>
+            <span class="hljs-keyword">if</span> (disallowIntercept || !onInterceptTouchEvent(ev)) &#123;  
+
+            <span class="hljs-comment">// 判断值1：disallowIntercept = 是否禁用事件拦截的功能(默认是false)，可通过调用requestDisallowInterceptTouchEvent（）修改</span>
+            <span class="hljs-comment">// 判断值2： !onInterceptTouchEvent(ev) = 对onInterceptTouchEvent()返回值取反</span>
+                    <span class="hljs-comment">// a. 若在onInterceptTouchEvent()中返回false（即不拦截事件），就会让第二个值为true，从而进入到条件判断的内部</span>
+                    <span class="hljs-comment">// b. 若在onInterceptTouchEvent()中返回true（即拦截事件），就会让第二个值为false，从而跳出了这个条件判断</span>
+                    <span class="hljs-comment">// c. 关于onInterceptTouchEvent() -&gt;&gt;分析1</span>
+
+                ev.setAction(MotionEvent.ACTION_DOWN);  
+                <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> scrolledXInt = (<span class="hljs-keyword">int</span>) scrolledXFloat;  
+                <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> scrolledYInt = (<span class="hljs-keyword">int</span>) scrolledYFloat;  
+                <span class="hljs-keyword">final</span> View[] children = mChildren;  
+                <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> count = mChildrenCount;  
+
+            <span class="hljs-comment">// 通过for循环，遍历了当前ViewGroup下的所有子View</span>
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = count - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;  
+                <span class="hljs-keyword">final</span> View child = children[i];  
+                <span class="hljs-keyword">if</span> ((child.mViewFlags &amp; VISIBILITY_MASK) == VISIBLE  
+                        || child.getAnimation() != <span class="hljs-keyword">null</span>) &#123; <span class="hljs-comment">//可见或正在执行动画 </span>
+                    child.getHitRect(frame);  
+
+                    <span class="hljs-comment">// 判断当前遍历的View是不是正在点击的View，从而找到当前被点击的View</span>
+                    <span class="hljs-comment">// 若是，则进入条件判断内部</span>
+                    <span class="hljs-keyword">if</span> (frame.contains(scrolledXInt, scrolledYInt)) &#123;  
+                        <span class="hljs-keyword">final</span> <span class="hljs-keyword">float</span> xc = scrolledXFloat - child.mLeft;  
+                        <span class="hljs-keyword">final</span> <span class="hljs-keyword">float</span> yc = scrolledYFloat - child.mTop;  
+                        ev.setLocation(xc, yc);  
+                        child.mPrivateFlags &amp;= ~CANCEL_NEXT_UP_EVENT;  
+
+                        <span class="hljs-comment">// 条件判断的内部调用了该View的dispatchTouchEvent()</span>
+                        <span class="hljs-comment">// 即 实现了点击事件从ViewGroup到子View的传递（具体请看下面的View事件分发机制）</span>
+                        <span class="hljs-keyword">if</span> (child.dispatchTouchEvent(ev))  &#123; 
+
+                        mMotionTarget = child;  
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>; 
+                        <span class="hljs-comment">// 调用子View的dispatchTouchEvent后是有返回值的</span>
+                        <span class="hljs-comment">// 若该控件可点击，那么点击时，dispatchTouchEvent的返回值必定是true，因此会导致条件判断成立</span>
+                        <span class="hljs-comment">// 于是给ViewGroup的dispatchTouchEvent（）直接返回了true，即直接跳出</span>
+                        <span class="hljs-comment">// 即把ViewGroup的点击事件拦截掉</span>
+
+                                &#125;  
+                            &#125;  
+                        &#125;  
+                    &#125;  
+                &#125;  
+            &#125;  
+            <span class="hljs-keyword">boolean</span> isUpOrCancel = (action == MotionEvent.ACTION_UP) ||  
+                    (action == MotionEvent.ACTION_CANCEL);  
+            <span class="hljs-keyword">if</span> (isUpOrCancel) &#123;  
+        <span class="hljs-comment">//如果是ACTION_UP或者ACTION_CANCEL, 将disallowIntercept设置为默认的false   </span>
+        <span class="hljs-comment">//假如我们调用了requestDisallowInterceptTouchEvent()方法来设置disallowIntercept为true   </span>
+        <span class="hljs-comment">//当我们抬起手指或者取消Touch事件的时候要将disallowIntercept重置为false   </span>
+        <span class="hljs-comment">//所以说上面的disallowIntercept默认在我们每次ACTION_DOWN的时候都是false   </span>
+                mGroupFlags &amp;= ~FLAG_DISALLOW_INTERCEPT;  
+            &#125;  
+            <span class="hljs-keyword">final</span> View <span class="hljs-keyword">target</span> = mMotionTarget;  
+
+        <span class="hljs-comment">// 若点击的是空白处（即无任何View接收事件） / 拦截事件（手动复写onInterceptTouchEvent（），从而让其返回true）</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">target</span> == <span class="hljs-keyword">null</span>) &#123;  
+            ev.setLocation(xf, yf);  
+            <span class="hljs-keyword">if</span> ((mPrivateFlags &amp; CANCEL_NEXT_UP_EVENT) != <span class="hljs-number">0</span>) &#123;  
+                ev.setAction(MotionEvent.ACTION_CANCEL);  
+                mPrivateFlags &amp;= ~CANCEL_NEXT_UP_EVENT;  
+            &#125;  
+            
+            <span class="hljs-function"><span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.<span class="hljs-title">dispatchTouchEvent</span><span class="hljs-params">(ev)</span></span>;
+            <span class="hljs-comment">// 调用ViewGroup父类的dispatchTouchEvent()，即View.dispatchTouchEvent()</span>
+            <span class="hljs-comment">// 因此会执行ViewGroup的onTouch() -&gt;&gt; onTouchEvent() -&gt;&gt; performClick（） -&gt;&gt; onClick()，即自己处理该事件，事件不会往下传递（具体请参考View事件的分发机制中的View.dispatchTouchEvent（））</span>
+            <span class="hljs-comment">// 此处需与上面区别：子View的dispatchTouchEvent（）</span>
+        &#125; 
+
+        ... 
+
+&#125;
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">onInterceptTouchEvent</span><span class="hljs-params">(MotionEvent ev)</span> </span>&#123;  
+      <span class="hljs-comment">//返回true = 拦截，即事件停止往下传递（需手动设置，即复写onInterceptTouchEvent（），从而让其返回true）</span>
+      <span class="hljs-comment">//返回false = 不拦截（默认）</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+
+  &#125;</code></pre>
+
+<blockquote>
+<p><img src="https://upload-images.jianshu.io/upload_images/17794320-5e5ab9fbb8dbfc6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif"></p>
+</blockquote>
+<p>到这里为止，你会发现没有任何一个地方消费了（使用了）触摸事件，因为目前为止所有的过程都只是在下发（往下传递MotionEvent），而真正要处理事件，是等到View（真的View，不是ViewGroup）在 <code>dispatchTouchEvent()</code> 中去做操作，在这里才会 <strong>真正</strong> 让 <code>dispatchTouchEvent()</code>与 <code>onTouchEvent()</code> 产生交集，接着往下看<br>#View事件的分发机制</p>
+<pre><code class="hljs csharp">  <span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">dispatchTouchEvent</span>(<span class="hljs-params">MotionEvent <span class="hljs-keyword">event</span></span>)</span> &#123;  
+  <span class="hljs-comment">// 只有以下3个条件都为真，dispatchTouchEvent()才返回true；否则执行onTouchEvent()</span>
+  <span class="hljs-comment">//     1. mOnTouchListener != null</span>
+  <span class="hljs-comment">//     2. (mViewFlags &amp; ENABLED_MASK) == ENABLED</span>
+  <span class="hljs-comment">//     3. mOnTouchListener.onTouch(this, event)</span>
+        <span class="hljs-keyword">if</span> (mOnTouchListener != <span class="hljs-literal">null</span> &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED &amp;&amp;  
+                mOnTouchListener.onTouch(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">event</span>)) &#123;  
+  <span class="hljs-comment">// 假如onTouch返回了true，直接返回True</span>
+onTouchEvent()处理
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;  
+        &#125; 
+  <span class="hljs-comment">// 假如onTouch没返回true，交给此View的</span>
+        <span class="hljs-keyword">return</span> onTouchEvent(<span class="hljs-keyword">event</span>);  
+  &#125;
+
+  <span class="hljs-comment">// 在这里为mOnTouchListener赋值</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setOnTouchListener</span>(<span class="hljs-params">OnTouchListener l</span>)</span> &#123; 
+    <span class="hljs-comment">// 即只要我们给控件注册了Touch事件，mOnTouchListener就一定被赋值（不为空）</span>
+    mOnTouchListener = l;  
+&#125; 
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment">  * 回调控件注册Touch事件时的onTouch（）；需手动复写设置，具体如下（以按钮Button为例）</span>
+<span class="hljs-comment">  */</span>
+    button.setOnTouchListener(<span class="hljs-keyword">new</span> OnTouchListener() &#123;  
+        @Override  
+        <span class="hljs-function"><span class="hljs-keyword">public</span> boolean <span class="hljs-title">onTouch</span>(<span class="hljs-params">View v, MotionEvent <span class="hljs-keyword">event</span></span>)</span> &#123;  
+     
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;  
+        &#125;  
+    &#125;);</code></pre>
+
+<blockquote>
+<p><img src="https://upload-images.jianshu.io/upload_images/17794320-6e3cbb62240c4242.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif"></p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/Blog/2020/11/19/Android%E7%8E%AF%E5%A2%83%E4%B8%8B-MQTT-Protocol-Buffers%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/">
+                        <span class="hidden-mobile">Android环境下 MQTT+Protocol Buffers实现消息推送</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>安卓学弟 </span></a> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>ZEKI</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/Blog/js/debouncer.js" ></script>
+<script  src="/Blog/js/events.js" ></script>
+<script  src="/Blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/Blog/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/Blog/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/Blog/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/Blog/js/boot.js" ></script>
+
+
+
+</body>
+</html>

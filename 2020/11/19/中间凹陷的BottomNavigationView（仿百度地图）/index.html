@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/Blog/img/favicon.png">
+  <link rel="icon" type="image/png" href="/Blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>中间凹陷的BottomNavigationView（仿百度地图） - ZEKI SPACE</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/Blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/Blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"github.com","root":"/Blog/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/Blog/js/utils.js" ></script>
+  <script  src="/Blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/Blog/">&nbsp;<strong>安卓学弟 ZEKI</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/Blog/img/bg/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="中间凹陷的BottomNavigationView（仿百度地图）">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-19 16:13" pubdate>
+        2020年11月19日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      893 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">中间凹陷的BottomNavigationView（仿百度地图）</h1>
+            
+            <div class="markdown-body">
+              <p>##GapBottomNavigtionView</p>
+<p>百度的：<br><img src="https://upload-images.jianshu.io/upload_images/17794320-2ab547998387f2ee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif" alt="71529789c6c948803e1075c2c7e00809.jpg"><br>我的：<br><img src="https://upload-images.jianshu.io/upload_images/17794320-faea132de3d4305f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif" alt="e9347423eb2031228af77ad63d7b01d7.jpg"></p>
+<blockquote>
+<p>项目地址：<a href="https://github.com/ZYF99/UIKit/tree/1.3">https://github.com/ZYF99/UIKit/tree/1.3</a></p>
+</blockquote>
+<p>###使用方式</p>
+<p>在app的build.gradle中</p>
+<pre><code class="hljs gradle"><span class="hljs-keyword">allprojects</span> &#123;
+		<span class="hljs-keyword">repositories</span> &#123;
+			...
+			maven &#123; url <span class="hljs-string">&#x27;https://jitpack.io&#x27;</span> &#125;
+		&#125;
+	&#125;
+
+	<span class="hljs-keyword">dependencies</span> &#123;
+	        implementation <span class="hljs-string">&#x27;com.github.ZYF99:UIKit:1.3&#x27;</span>
+	&#125;</code></pre>
+
+<p>在布局文件中直接使用</p>
+<pre><code class="hljs routeros">&lt;com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/fab_add&quot;</span>
+    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>
+    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>
+    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;30dp&quot;</span>
+    android:<span class="hljs-attribute">backgroundTint</span>=<span class="hljs-string">&quot;#ffffff&quot;</span>
+    android:<span class="hljs-attribute">elevation</span>=<span class="hljs-string">&quot;6dp&quot;</span>
+    android:<span class="hljs-attribute">src</span>=<span class="hljs-string">&quot;@android:drawable/ic_input_add&quot;</span>
+    android:<span class="hljs-attribute">tint</span>=<span class="hljs-string">&quot;#000000&quot;</span>
+    app:<span class="hljs-attribute">borderWidth</span>=<span class="hljs-string">&quot;0dp&quot;</span>
+    app:<span class="hljs-attribute">fabSize</span>=<span class="hljs-string">&quot;normal&quot;</span>
+    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;@+id/bottomnavigation&quot;</span>
+    app:<span class="hljs-attribute">layout_constraintEnd_toEndOf</span>=<span class="hljs-string">&quot;@+id/bottomnavigation&quot;</span>
+    app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;@+id/bottomnavigation&quot;</span>
+    app:<span class="hljs-attribute">rippleColor</span>=<span class="hljs-string">&quot;#00FFFFFF&quot;</span>/&gt;
+
+&lt;com.zhangyf.gapbottomnavigationview.GapBottomNavigationView
+    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/bottomnavigation&quot;</span>
+    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span>
+    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span>
+    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;32dp&quot;</span>
+    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;32dp&quot;</span>
+    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;16dp&quot;</span>
+    android:<span class="hljs-attribute">backgroundTint</span>=<span class="hljs-string">&quot;#ffffff&quot;</span>
+    android:<span class="hljs-attribute">clickable</span>=<span class="hljs-string">&quot;false&quot;</span>
+    android:<span class="hljs-attribute">padding</span>=<span class="hljs-string">&quot;8dp&quot;</span>
+    app:<span class="hljs-attribute">center_radius</span>=<span class="hljs-string">&quot;32dp&quot;</span>
+    app:<span class="hljs-attribute">corner_radius</span>=<span class="hljs-string">&quot;12dp&quot;</span>
+    app:<span class="hljs-attribute">elevation</span>=<span class="hljs-string">&quot;5dp&quot;</span>
+    app:<span class="hljs-attribute">itemBackground</span>=<span class="hljs-string">&quot;@null&quot;</span>
+    app:<span class="hljs-attribute">itemIconTint</span>=<span class="hljs-string">&quot;#000000&quot;</span>
+    app:<span class="hljs-attribute">itemTextColor</span>=<span class="hljs-string">&quot;#000000&quot;</span>
+    app:<span class="hljs-attribute">labelVisibilityMode</span>=<span class="hljs-string">&quot;labeled&quot;</span>
+    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span>
+    app:<span class="hljs-attribute">layout_constraintEnd_toEndOf</span>=<span class="hljs-string">&quot;parent&quot;</span>
+    app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span>
+    app:<span class="hljs-attribute">menu</span>=<span class="hljs-string">&quot;@menu/navigation&quot;</span>
+    app:<span class="hljs-attribute">shadow_length</span>=<span class="hljs-string">&quot;4dp&quot;</span>
+    tools:<span class="hljs-attribute">targetApi</span>=<span class="hljs-string">&quot;lollipop&quot;</span> /&gt;</code></pre>
+
+<blockquote>
+<p>anchor_fab： 用来指定凹陷下去的 View ，一般都为 FloatingActionButton<br>shadow_length：用来指定高度（阴影大小）<br>cornerRadius：用来指定拐角处的平滑半径大小</p>
+</blockquote>
+<p>##源码<br>attrs中的3个属性</p>
+<pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">resources</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">declare-styleable</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;GapBottomNavigationView&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">attr</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;shadow_length&quot;</span> <span class="hljs-attr">format</span>=<span class="hljs-string">&quot;dimension&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">attr</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;corner_radius&quot;</span> <span class="hljs-attr">format</span>=<span class="hljs-string">&quot;dimension&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">attr</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;center_radius&quot;</span> <span class="hljs-attr">format</span>=<span class="hljs-string">&quot;dimension&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">declare-styleable</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">resources</span>&gt;</span></code></pre>
+
+<p>#####导入源码（请直接copy）</p>
+<blockquote>
+<p>源码采用Kotlin，有需要可以直接转为Java，转换方法自行百度</p>
+</blockquote>
+<pre><code class="hljs roboconf">package com.zhangyf.gapbottomnavigationview
+
+<span class="hljs-keyword">import</span> android.annotation.SuppressLint
+<span class="hljs-keyword">import</span> android.content.Context
+<span class="hljs-keyword">import</span> android.graphics.*
+<span class="hljs-keyword">import</span> android.graphics.drawable.GradientDrawable
+<span class="hljs-keyword">import</span> android.os.Build
+<span class="hljs-keyword">import</span> android.util.AttributeSet
+<span class="hljs-keyword">import</span> android.util.Log
+<span class="hljs-keyword">import</span> androidx.annotation.*
+<span class="hljs-keyword">import</span> com.google.android.material.bottomnavigation.BottomNavigationView
+
+class GapBottomNavigationView : BottomNavigationView &#123;
+
+    <span class="hljs-attribute">private var fabId = 0 //凹陷View的id</span>
+<span class="hljs-attribute">    private var centerRadius</span>: Float = 0<span class="hljs-variable">.toFloat</span>() //中间凹陷的半径
+    private var cornerRadius = 12f //拐角处的圆滑大小（越大越平滑）
+    private var shadowLength = 6f //阴影大小
+
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) &#123;
+        background = GradientDrawable()<span class="hljs-variable">.apply</span> &#123; setColor(Color<span class="hljs-variable">.TRANSPARENT</span>) &#125;
+        val ta = context<span class="hljs-variable">.obtainStyledAttributes</span>(attrs, R<span class="hljs-variable">.styleable</span><span class="hljs-variable">.GapBottomNavigationView</span>)
+        centerRadius = ta<span class="hljs-variable">.getDimension</span>(R<span class="hljs-variable">.styleable</span><span class="hljs-variable">.GapBottomNavigationView_center_radius</span>, 0<span class="hljs-variable">.toFloat</span>())
+        shadowLength = ta<span class="hljs-variable">.getDimension</span>(R<span class="hljs-variable">.styleable</span><span class="hljs-variable">.GapBottomNavigationView_shadow_length</span>, 6<span class="hljs-variable">.toFloat</span>())
+        cornerRadius = ta<span class="hljs-variable">.getDimension</span>(R<span class="hljs-variable">.styleable</span><span class="hljs-variable">.GapBottomNavigationView_corner_radius</span>, 12<span class="hljs-variable">.toFloat</span>())
+        ta<span class="hljs-variable">.recycle</span>()
+    &#125;
+
+    @SuppressLint(&quot;DrawAllocation&quot;)
+    @RequiresApi(api = Build<span class="hljs-variable">.VERSION_CODES</span><span class="hljs-variable">.KITKAT</span>)
+    override fun onDraw(canvas: Canvas) &#123;
+        super<span class="hljs-variable">.onDraw</span>(canvas)
+        val paint = Paint()
+        val path = Path()
+
+        //左边的半圆
+        val rectL = RectF(
+            shadowLength,
+            shadowLength,
+            height<span class="hljs-variable">.toFloat</span>() + shadowLength,
+            height<span class="hljs-variable">.toFloat</span>() - shadowLength
+        )
+        path<span class="hljs-variable">.arcTo</span>(rectL, 90<span class="hljs-variable">.toFloat</span>(), 180<span class="hljs-variable">.toFloat</span>(), false)
+
+        path<span class="hljs-variable">.lineTo</span>(width / 2 - centerRadius - cornerRadius, shadowLength)
+
+        //左边转角处
+        path<span class="hljs-variable">.quadTo</span>(
+            width / 2 - centerRadius,
+            shadowLength,
+            width / 2 - centerRadius,
+            cornerRadius + shadowLength
+        )
+
+        //中间凹陷的半圆
+        val rectCenter = RectF(
+            width / 2 - centerRadius,
+            cornerRadius + shadowLength - centerRadius,
+            width / 2 + centerRadius,
+            cornerRadius + centerRadius + shadowLength
+        )
+
+        path<span class="hljs-variable">.arcTo</span>(rectCenter, 180<span class="hljs-variable">.toFloat</span>(), (-180)<span class="hljs-variable">.toFloat</span>(), false)
+
+
+        //利用贝塞尔曲线画中间凹陷（非半圆）
+/*		path<span class="hljs-variable">.quadTo</span>(
+			width<span class="hljs-variable">.toFloat</span>() / 2,
+			centerRadius<span class="hljs-variable">.toFloat</span>(),
+			width / 2 + centerRadius - cornerRadius - cornerRadius / sqrt(2<span class="hljs-variable">.toFloat</span>()),
+			cornerRadius / sqrt(2<span class="hljs-variable">.toFloat</span>())
+		)*/
+
+        //右边转角处
+        path<span class="hljs-variable">.quadTo</span>(
+            width / 2 + centerRadius,
+            shadowLength,
+            width / 2 + centerRadius + cornerRadius,
+            shadowLength
+        )
+        path<span class="hljs-variable">.lineTo</span>((width - shadowLength - height / 2), shadowLength)
+
+
+        //右边的半圆
+        val rectR = RectF(
+            width<span class="hljs-variable">.toFloat</span>() - shadowLength - height,
+            shadowLength,
+            width<span class="hljs-variable">.toFloat</span>() - shadowLength,
+            height<span class="hljs-variable">.toFloat</span>() - shadowLength
+        )
+        path<span class="hljs-variable">.arcTo</span>(rectR, 270<span class="hljs-variable">.toFloat</span>(), 180<span class="hljs-variable">.toFloat</span>(), false)
+
+        //最后的直线
+        path<span class="hljs-variable">.moveTo</span>((width - shadowLength - height / 2), height<span class="hljs-variable">.toFloat</span>() - shadowLength)
+        path<span class="hljs-variable">.lineTo</span>(height / 2<span class="hljs-variable">.toFloat</span>() + shadowLength, height<span class="hljs-variable">.toFloat</span>() - shadowLength)
+        path<span class="hljs-variable">.close</span>()
+        Log<span class="hljs-variable">.d</span>(&quot;!!!&quot;, &quot;!!!!!!!!!!!!&quot;)
+
+        //按背景色填充背景
+        paint<span class="hljs-variable">.apply</span> &#123;
+            style = Paint<span class="hljs-variable">.Style</span><span class="hljs-variable">.FILL</span>
+            if (Build<span class="hljs-variable">.VERSION</span><span class="hljs-variable">.SDK_INT</span> &gt;= Build<span class="hljs-variable">.VERSION_CODES</span><span class="hljs-variable">.LOLLIPOP</span>) &#123;
+                color = backgroundTintList?<span class="hljs-variable">.defaultColor</span> ?: Color<span class="hljs-variable">.BLACK</span>
+            &#125;
+            maskFilter = null
+            isAntiAlias = true
+            //添加阴影
+            setShadowLayer(shadowLength, 0<span class="hljs-variable">.toFloat</span>(), 0<span class="hljs-variable">.toFloat</span>(), Color<span class="hljs-variable">.LTGRAY</span>)
+        &#125;
+        canvas<span class="hljs-variable">.drawPath</span>(path, paint)
+    &#125;
+&#125;
+</code></pre>
+
+<blockquote>
+<p>建议：结合我的代码并利用 paint（画笔） 随意更改为你想要的形状</p>
+</blockquote>
+<p>我的效果就是这样咯<br><img src="https://upload-images.jianshu.io/upload_images/17794320-fc974949ebf9b9ce.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" srcset="/Blog/img/loading.gif" alt="093143d5ebb666338bc164a6bd339da5.jpg"></p>
+<p>喜欢不要忘了点赞关注或者去github点个星星哦～～</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/Blog/2020/11/19/Android%E7%8E%AF%E5%A2%83%E4%B8%8B-MQTT-Protocol-Buffers%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Android环境下 MQTT+Protocol Buffers实现消息推送</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>安卓学弟 </span></a> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>ZEKI</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/Blog/js/debouncer.js" ></script>
+<script  src="/Blog/js/events.js" ></script>
+<script  src="/Blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/Blog/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/Blog/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/Blog/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/Blog/js/boot.js" ></script>
+
+
+
+</body>
+</html>
