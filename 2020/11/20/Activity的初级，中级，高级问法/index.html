@@ -1,0 +1,873 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/Blog/img/favicon.png">
+  <link rel="icon" type="image/png" href="/Blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>Activity的初级，中级，高级问法 - ZEKI SPACE</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/Blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/Blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"github.com","root":"/Blog/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/Blog/js/utils.js" ></script>
+  <script  src="/Blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/Blog/">&nbsp;<strong>安卓学弟 ZEKI</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/Blog/img/bg/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Activity的初级，中级，高级问法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-20 10:10" pubdate>
+        2020年11月20日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      10.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      127
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Activity的初级，中级，高级问法</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Activity的初级，中级，高级问法"><a href="#Activity的初级，中级，高级问法" class="headerlink" title="Activity的初级，中级，高级问法"></a>Activity的初级，中级，高级问法</h1><p>Activity是我们常用App开发中最重要的组件，主要用于展示界面和用户交互。本文分为三个部分：</p>
+<p>Activity源码和常见的问题</p>
+<ol>
+<li>Activity的生命周期，正常情况和异常情况？</li>
+<li>Activity的四种启动模式，启动页设置singleTask/singleInstance可能造成什么后果？</li>
+<li>任务，任务栈，前台任务栈，后台任务栈，返回栈分别是什么？</li>
+<li>startActivityForResult导致的一系列问题？</li>
+<li>清除返回栈（Clearing the back stack）的一些概念</li>
+<li>allowTaskReparenting的使用</li>
+<li>Activity的隐式启动</li>
+<li>Activity启动流程</li>
+</ol>
+<p>Activity深层次问题</p>
+<ol>
+<li>Activity生命周期的变化对进程的优先级有什么影响？</li>
+<li>如果App还存在缓存进程，这个时候启动App，应用Application的onCreate方法会执行吗？</li>
+<li>一个Activity A启动另一个Activity B，为何会先走A的onPause方法，等到B执行完onResume方法后，才会走A的onStop方法呢？</li>
+<li>为什么要这么设计Activity生命周期？</li>
+</ol>
+<p>第三方App中一些Activity的设置</p>
+<ol>
+<li>今日头条极速版-新闻界面打开的一些限制和首页</li>
+</ol>
+<h4 id="Activity源码和常见的问题"><a href="#Activity源码和常见的问题" class="headerlink" title="Activity源码和常见的问题"></a>Activity源码和常见的问题</h4><h5 id="1-Activity的生命周期，正常情况和异常情况？"><a href="#1-Activity的生命周期，正常情况和异常情况？" class="headerlink" title="1.Activity的生命周期，正常情况和异常情况？"></a>1.Activity的生命周期，正常情况和异常情况？</h5><p>首先来看看官网上Activity的生命周期，如下图所示</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38e47625f72949e4b2d035c27ed4c321~tplv-k3u1fbpfcp-watermark.image" srcset="/Blog/img/loading.gif" alt="img"></p>
+<p>生命周期在开发中会常常被我们用到，比如在界面的恢复和销毁等回调具体的方法，我们在这些方法做一些数据的处理等。当然这里面还少了方法<code>onSaveInstance和onRestoreInstance</code>方法用于状态的保存和恢复，还有一个方法<code>onConfigurationChanged()</code>用于配置变更后的回调。</p>
+<p>下面是一些<strong>常用的生命周期回调流程</strong>：</p>
+<ul>
+<li>启动Activity：<code>onCreate()-&gt;onStart()-&gt;onResume()</code></li>
+<li>点击返回键：<code>onPause()-&gt;onStop()-&gt;onDestroy()</code></li>
+<li>点击Home键：<code>onPause()-&gt;onSaveInstanceState()-&gt;onStop()</code>，<strong>注意在API28之后<code>onSaveInstanceState()</code>方法的执行放在了<code>onStop()</code>之后</strong>。</li>
+<li>用户再次回到原Activity：<code>onRestart()-&gt;onStart()-&gt;onResume()</code></li>
+<li>A Activity启动B Activity：<code>A#onPause()-&gt;B#onCreate()-&gt;B#onStart()-&gt;B#onResume()-&gt;A#onStop()</code></li>
+</ul>
+<p>再来看一下<strong>异常情况下的生命周期分析</strong>：</p>
+<ol>
+<li><p>系统配置发配置变化时生命周期的回调(API28+)</p>
+<p><code>onPause()-&gt;onStop()-&gt;onSaveInstanceState()-&gt;onDestroy()</code>，然后当Activity被重新创建后执行<code>onCreate()-&gt;onStart()-&gt;onRestoreInstanceState()-&gt;onResume()</code></p>
+<p>这里的配置发生变化可以指屏幕发生旋转或者切换到多窗口模式等等。</p>
+<p><strong>系统配置发生改变时，如果不想重新创建Activity，可以通过在AndroidManifest.xml中配置<a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/manifest/activity-element?hl=zh-cn#config"><code>android:configChanges</code></a>属性，如果想做一些额外的操作可以在onConfigurationChanged回调中处理</strong>。</p>
+</li>
+<li><p>资源内存不足导致低优先级进程被回收，当系统资源不足时，会杀死低优先级进程，此时会调用<code>onSaveInstanceState()和onRestoreInstanceState()</code>进行数据的存储和恢复。</p>
+</li>
+</ol>
+<h5 id="2-Activity的四种启动模式，启动页设置SingleTask-SingleInstance可能造成什么后果？"><a href="#2-Activity的四种启动模式，启动页设置SingleTask-SingleInstance可能造成什么后果？" class="headerlink" title="2.Activity的四种启动模式，启动页设置SingleTask/SingleInstance可能造成什么后果？"></a>2.Activity的四种启动模式，启动页设置SingleTask/SingleInstance可能造成什么后果？</h5><p>在清单文件中声明 Activity 时，可以使用 <a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/manifest/activity-element?hl=zh-cn"><code>Activity</code></a> 元素的 <a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/manifest/activity-element?hl=zh-cn#lmode"><code>launchMode</code></a> 属性指定 Activity 应该如何与任务关联。</p>
+<ul>
+<li><p>stardard：默认模式，系统在启动该 Activity 的任务中创建 Activity 的新实例，并将 intent 传送给该实例。Activity 可以多次实例化，每个实例可以属于不同的任务，一个任务可以拥有多个实例。注意在该模式下配合FLAG_ACTIVITY_NEW_TASK 与 FLAG_ACTIVITY_CLEAR_TOP，单独/一起配合，<strong>都会重新创建实例</strong>。</p>
+</li>
+<li><p>singleTop：<strong>栈顶复用</strong>模式，如果当前任务的顶部已存在 Activity 的实例，则系统会通过调用其 <code>onNewIntent()</code> 方法来将 intent 转送给该实例，而不是创建 Activity 的新实例。在该模式下配合FLAG_ACTIVITY_CLEAR_TOP是用哪个，不会重新创建实例，会有类似SingleTask的效果，但是如果再加上FLAG_ACTIVITY_NEW_TASK，还是会创建新实例。</p>
+</li>
+<li><p>singleTask：<strong>栈内复用</strong>模式，系统会创建新任务，并实例化新任务的根 Activity。但是，如果另外的任务中已存在该 Activity 的实例，则系统会通过调用其 <code>onNewIntent()</code> 方法将 intent 转送到该现有实例，而不是创建新实例。Activity 一次只能有一个实例存在。该模式默认具有clearTop的效果。</p>
+</li>
+<li><p>singleInstance：<strong>单实例</strong>模式，与 <code>&quot;singleTask&quot;</code> 相似，唯一不同的是系统不会将任何其他 Activity 启动到包含该实例的任务中。该 Activity 始终是其任务唯一的成员；由该 Activity 启动的任何 Activity 都会在其他的任务中打开。</p>
+<p><strong>关于singleInstance有个特殊的情况</strong>，如果一个A Activity（standard）启动B Activity（singleInstance），这个时候用户点击了手机最近访问列表，然后在再点击该App所在的界面（卡片），然后这个时候点击返回键竟然就直接退出了App，而不是我们预期的退到A Activity界面。其实最近访问列表也是一个Activity（假设为C Activity），当我们从这个C Activity点击App卡片显示我们的singleInstance所在的界面B，这个时候就相当于C启动了B，所以我们点击返回键，就直接回到了桌面（有兴趣可以自己看看源码）。</p>
+<p>还有一个特殊的情况（来自扔物线大佬的文章），就是在<strong>最近任务里看见的 Task 未必还活着，最近任务里看不见的 Task，也未必就死了，比如 singleInstance</strong>。当我们查看最近任务的时候，不同的 Task 会并列展示出来，但有一个前提：它们的 taskAffinity 需要不一样。<strong>在 Android 里，同一个 taskAffinity 可以被创建出多个 Task，但它们最多只能有一个显示在最近任务列表</strong>。这也就是为什么刚才例子里 singleInstance 的那个 Activity 会从最近任务里消失了：因为它被另一个相同 taskAffinity 的 Task 抢了排面。</p>
+<p>同理，你在一个App从首页Activity新建一个Activity(singletask/singleInstance)，如果没有指定taskAffinity，这个Activity的taskAffinity和其他界面一样，所以在最近的范围列表，你也只能看到一个App的卡片，但是如果你taskAffinity设置的不一样，就可以看到在最近列表中看到两个了。</p>
+</li>
+</ul>
+<p>上面讲到的任务对应的是TaskRecord(<strong>栈结构</strong>)，其内部维护了一个<code>ArrayList&lt;ActivityRecord&gt;</code>用来保存和管理ActivityRecord，<strong>ActivityRecord包含了一个Activity的所有信息</strong>。</p>
+<p>通常我们的App都会设置启动页(SplashActivity通常是一张图片)，然后进入我们的主界面（MainActivity），在主界面中通常有很多逻辑会导致该界面异常庞大，占据的内存很大，所以很多时候我们都会给该界面设置为SingleTask栈内复用模式。</p>
+<p>场景一：如果为了达到快速启动的效果，将我们的App的闪屏页(SplashActivity显示固定图片)移除掉，换成MainActivity（SingleTask/SingleInstance）的背景（windowBackground），最后再替换成App的主题，给用户快速响应的体验；</p>
+<p>场景二：如果给启动页SplashActivity设置为SingleTask/SingleInstance模式，同时你的启动页没有及时的关闭。</p>
+<p>以上两种场景会导致你的App无论冷启动还是热启动，每次点击图标都是从启动页开始启动的，具体的原理可以看我这篇文章的分析和解决方案。<a target="_blank" rel="noopener" href="https://juejin.im/post/6888990959233662990">切记，不要在你的App启动界面设置SingleTask/SingleInstance</a>。</p>
+<h5 id="3-任务，任务栈，前台任务栈，后台任务栈，返回栈分别是什么？"><a href="#3-任务，任务栈，前台任务栈，后台任务栈，返回栈分别是什么？" class="headerlink" title="3.任务，任务栈，前台任务栈，后台任务栈，返回栈分别是什么？"></a>3.任务，任务栈，前台任务栈，后台任务栈，返回栈分别是什么？</h5><p>首先来看官网的说明<a target="_blank" rel="noopener" href="https://developer.android.com/guide/components/activities/tasks-and-back-stack?hl=zh-cn">Understand Tasks and Back Stack</a>，(A task is a collection of activities that users interact with when performing a certain job. The activities are arranged in a stack—the <em>back stack</em>)—in the order in which each activity is opened. )任务是用户在执行某项工作时与之互动的一系列 Activity 的集合。这些 Activity 按照每个 Activity 打开的顺序排列在一个返回堆栈中。前面说过任务对应的是TaskRecord(<strong>栈结构</strong>)，其内部维护了一个<code>ArrayList&lt;ActivityRecord&gt;</code>用来保存和管理ActivityRecord，ActivityRecord包含了一个Activity的所有信息。所以其实<strong>任务就是任务栈（TaskRecord是栈结构</strong>)。</p>
+<p>那么返回栈是什么，首先展示一张Gityuan博客的<a target="_blank" rel="noopener" href="http://gityuan.com/2017/06/11/activity_record/">图片</a>。 <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b681e32886a74f1c8012a762be7ccec6~tplv-k3u1fbpfcp-watermark.image" srcset="/Blog/img/loading.gif" alt="img"></p>
+<ul>
+<li>一般地，对于没有分屏功能以及虚拟屏的情况下，ActivityStackSupervisor与ActivityDisplay都是系统唯一；</li>
+<li>ActivityDisplay主要有Home Stack和App Stack这两个栈；</li>
+<li>每个ActivityStack中可以有若干个TaskRecord对象，<strong>当前只会有一个获得了焦点的ActivityStack</strong>；</li>
+<li>每个TaskRecord包含如果若干个ActivityRecord对象；</li>
+<li>每个ActivityRecord记录一个Activity信息。</li>
+</ul>
+<p><strong>一个返回栈可能只包含一个任务，但在特殊情况下，可能引入多个任务</strong>。这个概念非常重要，这里引用官方的图</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8031cba5772b40d089f2a6097ed69e82~tplv-k3u1fbpfcp-watermark.image" srcset="/Blog/img/loading.gif" alt="img"></p>
+<p>这里先说一下操作流程，依次启动ActivityX，ActivityY，Activity1，Activity2；ActivityY，ActivityX（这两个都是SingleTask）在后台任务中，Activity2，Activity1在前台任务中，这两个任务的taskAffinity不同，当从Activity2中启动ActivityY的时候，返回栈如第二列所示，然后点击返回键可以一个个退出。</p>
+<p>再普及一个概念在 Android 里，每个 Activity 都有一个 taskAffinity，它就相当于是对每个 Activity 预先进行的分组。它的值默认取自它所在的 Application 的 taskAffinity，而 Application 的 taskAffinity 默认是 App 的包名。当然也可以手动指定taskAffinity。</p>
+<p><strong>但是图中并没有指明Activity2，Activity1是什么启动模式，实际上我如果我们指定为standard标准模式根本模拟不出这个场景，这一点有点坑</strong>，因为这四个Activity分别按2，1，X，Y排列，也即是说启动是从Y，X，1，2一个个启动的，如果Activity1为standard，就算你指定了Activity1的taskAffinity和ActivityY的不同也没有用，Activity1还是会和ActivityY在同一个任务(TaskRecord)中，也就是说**standard 和 singleTop 的 Activity 在哪个 TaskRecord 启动，全凭启动它的 Activity 在哪个 TaskRecord，taskAffinity在同时指定为singleTask模式下才有意义(只有一种例外，standard 和 singleTop在 allowTaskReparenting 为 true，且被其他应用以 DeepLink 的方式唤起时，才会在指定的任务中)**。</p>
+<p>所以我们将Activity2，Activity1也设置为singleTask，同时taskAffinity也相同，才会模拟出上面的场景，点击Activity2启动ActivityY，才会将后台任务栈ActivityY，ActivityX都带到前台任务栈中，也就是都带到返回栈中。</p>
+<p><strong>小结</strong></p>
+<p>任务就是任务栈（<strong>TaskRecord是栈结构</strong>)，TaskRecord内部维护了一个<code>ArrayList&lt;ActivityRecord&gt;</code>用来保存和管理ActivityRecord，ActivityRecord包含了一个Activity的所有信息。</p>
+<p>一个返回栈可能只包含一个任务，但特殊情况下，可能引入多个任务。<strong>返回栈，前台任务栈，后台任务栈其实在源码中并没有明确的定义，而是在我们操作任务栈过程中提出的一些“概念”，为了便于描述和区分</strong>。</p>
+<p>前台栈比如现在<strong>下图A</strong>中的Activity2，Activity1所在的任务，后台任务栈是ActivityY，ActivityX所在的任务。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1be237dc6554e2fb67c20d2f5e0118c~tplv-k3u1fbpfcp-watermark.image" srcset="/Blog/img/loading.gif" alt="img"></p>
+<p>但是问题来了，当Activity2启动ActivityY的时候，返回栈中的内容如<strong>下图B</strong>所示，这个时候前台任务栈是什么呢？</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98f7ce0688724b05be5ac26d087b307d~tplv-k3u1fbpfcp-watermark.image" srcset="/Blog/img/loading.gif" alt="img"></p>
+<p>这个时候后台的任务栈（ActivityY，ActivityX）已经返回到前台，四个Activity都在前台，<strong>此时返回堆栈中包含了转到前台任务中的所有Activity（这句话来自<a target="_blank" rel="noopener" href="https://developer.android.com/guide/components/activities/tasks-and-back-stack?hl=zh-cn">官网</a>对这一场景的说明）</strong>。</p>
+<p>问题又来了，比如我们前面说的后台任务栈是在后台等待恢复(比如ActivityX，ActivityY所在的栈)，依次启动ActivityX，ActivityY，Activity1，Activity2，如果你这个时候什么都不做，不断点击返回键，这四个Activity会一个个退出，这个时候你会不会觉得返回栈包含前台任务栈和后台任务栈。但是一开始图A中返回栈（Back Stack）只标明了Activity1，Activity2，这就出现矛盾了，<strong>但我的感觉返回栈就是字面上的含义，点击返回键，能退出多少个Activity，那么这些Activity就都在返回栈中，返回栈就是一个概念，当然你也可以理解它的大小动态变化的（点击返回键的过程中可能大小可能新增）</strong>。</p>
+<h5 id="4-startActivityForResult导致的一系列问题？"><a href="#4-startActivityForResult导致的一系列问题？" class="headerlink" title="4.startActivityForResult导致的一系列问题？"></a>4.startActivityForResult导致的一系列问题？</h5><p>在使用Activity的startActivityForResult启动新界面时，在Api20以下调整时会直接返回<code>Activity.RESULT_CANCELED</code>，官方觉得不应该在两个任务之间setResult。在Api20及以上，对于非startActivity跳转，也就是reqeusetCode&gt;=0，singleTask和SingleInstance模式启动的Activity都不会新建一个任务，还是在原来的栈中。同时官方也建议：</p>
+<p>虽然所有 API 级别的 <code>Activity</code> 类均提供底层 <a href="%5Bdeveloper.android.com/reference/a%E2%80%A6%5D(https://developer.android.com/reference/android/app/Activity#startActivityForResult(android.content.Intent"><code>startActivityForResult()</code></a>, int)) 和 <a href="%5Bdeveloper.android.com/reference/a%E2%80%A6%5D(https://developer.android.com/reference/android/app/Activity#onActivityResult(int"><code>onActivityResult()</code></a>, int, android.content.Intent)) API，但我们强烈建议您使用 AndroidX <a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/androidx/releases/activity#1.2.0-alpha02">Activity <code>1.2.0-alpha02</code></a> 和 <a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/androidx/releases/fragment#1.3.0-alpha02">Fragment <code>1.3.0-alpha02</code></a> 中引入的 Activity Result API。</p>
+<h5 id="5-清除返回栈（Clearing-the-back-stack）的一些概念"><a href="#5-清除返回栈（Clearing-the-back-stack）的一些概念" class="headerlink" title="5.清除返回栈（Clearing the back stack）的一些概念"></a>5.清除返回栈（Clearing the back stack）的一些概念</h5><p>如果用户离开任务较长时间，系统会清除任务中除根 Activity 以外的所有 Activity。当用户再次返回到该任务时，只有根 Activity 会恢复。系统之所以采取这种行为方式是因为，经过一段时间后，用户可能已经放弃了之前执行的操作，现在返回任务是为了开始某项新的操作。</p>
+<p>您可以使用一些 Activity 属性来修改此行为：</p>
+<ul>
+<li><p><code>alwaysRetainTaskState</code></p>
+<p>如果在任务的根 Activity 中将该属性设为 <code>&quot;true&quot;</code>，则不会发生上述默认行为。即使经过很长一段时间后，任务仍会在其堆栈中保留所有 Activity。</p>
+</li>
+<li><p><code>clearTaskOnLaunch</code></p>
+<p>如果在任务的根 Activity 中将该属性设为 <code>&quot;true&quot;</code>，那么只要用户离开任务再返回，堆栈就会被清除到只剩根 Activity。也就是说，它与 <a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/manifest/activity-element#always"><code>alwaysRetainTaskState</code></a> 正好相反。用户始终会返回到任务的初始状态，即便只是短暂离开任务也是如此。</p>
+</li>
+<li><p><code>finishOnTaskLaunch</code></p>
+<p>该属性与 <a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/manifest/activity-element#clear"><code>clearTaskOnLaunch</code></a> 类似，但它只会作用于单个 Activity 而非整个任务。它还可导致任何 Activity 消失，包括根 Activity。如果将该属性设为 <code>&quot;true&quot;</code>，则 Activity 仅在当前会话中归属于任务。如果用户离开任务再返回，则该任务将不再存在。</p>
+</li>
+</ul>
+<h5 id="6-allowTaskReparenting的使用"><a href="#6-allowTaskReparenting的使用" class="headerlink" title="6.allowTaskReparenting的使用"></a>6.allowTaskReparenting的使用</h5><p>Activity 默认情况下只会归属于一个 Task，不会在多个 Task 之间跳来跳去，但你可以通过设置来改变这个逻辑。把它的 allowTaskReparenting 属性设置为 true。如果未设置该属性，则由 <code>&lt;Activity&gt;</code> 元素的相应 <code>allowTaskReparenting</code> 属性所设置的值。默认值为“<code>false</code>”。</p>
+<p>正常情况下，Activity 启动时会与启动它的任务关联，并在其整个生命周期中一直留在该任务处。当不再显示现有任务时，您可以使用该属性强制 Activity 将其父项更改为与其有相似性的任务。该属性通常用于将应用的 Activity 转移至与该应用关联的主任务。</p>
+<p>例如，如果电子邮件消息包含网页链接，则点击该链接会调出可显示该网页的 Activity。该 Activity 由浏览器应用定义，但作为电子邮件任务的一部分启动。<strong>如果将该 Activity 的父项更改为浏览器任务，则它会在浏览器下一次转至前台时显示，在电子邮件任务再次转至前台时消失</strong>。</p>
+<h5 id="7-Activity的隐式启动"><a href="#7-Activity的隐式启动" class="headerlink" title="7.Activity的隐式启动"></a>7.Activity的隐式启动</h5><p>Activity分为显示启动和隐式启动，显示启动就是我们平时调用的一些<code>startActivityXXX()</code>方法，隐式启动可以通过action来启动，启动时调用如下，同时要记得添加category为<code>&quot;android.intent.category.DEFAULT&quot;</code>。</p>
+<pre><code class="hljs java">Intent implicitIntent = <span class="hljs-keyword">new</span> Intent();
+implicitIntent.setAction(<span class="hljs-string">&quot;com.test.image&quot;</span>);
+implicitIntent.addCategory(<span class="hljs-string">&quot;android.intent.category.DEFAULT&quot;</span>);
+MainActivity.<span class="hljs-keyword">this</span>.startActivity(implicitIntent);
+复制代码</code></pre>
+
+<p>具体界面的配置如下：</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">activity</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.ImageActivity&quot;</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">android:exported</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.test.image&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.category.DEFAULT&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span>
+复制代码</code></pre>
+
+<p>注意如果是其他App的Activity，需要添加android:exported=”true”才能被调用。</p>
+<h5 id="8-Activity的启动流程（中级问题）"><a href="#8-Activity的启动流程（中级问题）" class="headerlink" title="8.Activity的启动流程（中级问题）"></a>8.Activity的启动流程（中级问题）</h5><p>对很多开发者来说，这可能都是个很沉重的问题，原因很简单，因为回答不好，毕竟里面涉及到的东西很多，需要你拥有很大知识存储量。下面来尝试回答这个问题（基于源码9.0）</p>
+<p>首先先普及一些常见的概念</p>
+<h6 id="Instrumentation"><a href="#Instrumentation" class="headerlink" title="Instrumentation"></a>Instrumentation</h6><p>Android Instrumentation是Android系统中的一套控制方法或者“钩子”，这些钩子可以在正常的生命周期（正常是由操作系统控制的）之外控制Android控件的运行，其实指的就是<strong>Instrumentation类提供的各种流程控制方法</strong>。</p>
+<p><code>app-&gt;instrumentation-&gt;ams-&gt;app</code>，自动化测试可以通过Instrumentation来操作Activity等，这个<strong>Instrumentation相当于设计了一个统一的入口</strong>。</p>
+<h6 id="ActivityThread"><a href="#ActivityThread" class="headerlink" title="ActivityThread"></a>ActivityThread</h6><p>ActivityThread不是线程类（Thread），只不过它会跑在<code>ActivityThread.main()</code>方法中，安卓程序的入口就是该方法，同时在该方法中一个Looper不断循环的在消息队列中处理消息。管理应用程序进程中主线程的执行，根据Activity管理者的请求调度和执行activities、broadcasts及其相关的操作。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+    <span class="hljs-comment">// 看源码很重要的一个能力就是‘眼中只有你’，认不到的都忽略，看认得到的</span>
+    ···
+    <span class="hljs-comment">// 创建主线程的Looper对象，发现和工作线程创建Looper对象调用的方法不一样，这里先记下，以后在详解。</span>
+    <span class="hljs-comment">// 主线程原来也有Looper对象啊</span>
+    Looper.prepareMainLooper();
+
+    <span class="hljs-comment">//创建ActivityThread</span>
+    ActivityThread thread = <span class="hljs-keyword">new</span> ActivityThread();
+    thread.attach(<span class="hljs-keyword">false</span>);
+
+    <span class="hljs-comment">// 如果主线程的Handler为空（可以看出，一个好的命名可读性是多么高），那就为主线程创建一个Handler。</span>
+    <span class="hljs-comment">// 然后我们还可以在主线程创建Handler，说明一个线程对应多个Handler。多读源码，很多问题都得到了解决啊。</span>
+    <span class="hljs-keyword">if</span> (sMainThreadHandler == <span class="hljs-keyword">null</span>) &#123;
+        sMainThreadHandler = thread.getHandler();
+    &#125;
+    Looper.loop()；
+    
+    <span class="hljs-comment">// 这里抛了个异常，主线程loop异常退出。说明主线程loop不能退出，这里和前面建立Looper对象的调用方法有关</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Main thread loop unexpectedly exited&quot;</span>);
+&#125;
+复制代码</code></pre>
+
+<h6 id="ActivityManagerService"><a href="#ActivityManagerService" class="headerlink" title="ActivityManagerService"></a>ActivityManagerService</h6><p>Android中最核心的服务，主要负责系统中四大组件的启动、切换、调度及应用程序的管理和调度等工作。</p>
+<h6 id="ActivityManager"><a href="#ActivityManager" class="headerlink" title="ActivityManager"></a>ActivityManager</h6><p>该类提供与Activity、Service和Process相关的信息以及交互方法， 可以被看作是ActivityManagerService的辅助类。</p>
+<h6 id="ActivityStackSupervisor"><a href="#ActivityStackSupervisor" class="headerlink" title="ActivityStackSupervisor"></a>ActivityStackSupervisor</h6><p>负责所有Activity栈的管理。内部管理了mHomeStack、mFocusedStack和mLastFocusedStack三个Activity栈。其中，mHomeStack管理的是Launcher相关的Activity栈；mFocusedStack管理的是当前显示在前台Activity的Activity栈；mLastFocusedStack管理的是上一次显示在前台Activity的Activity栈。下面是大致的关系图，对于没有分屏功能以及虚拟屏的情况下，ActivityStackSupervisor与ActivityDisplay都是系统唯一。</p>
+<p>![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)</p>
+<h6 id="ActivityStack"><a href="#ActivityStack" class="headerlink" title="ActivityStack"></a>ActivityStack</h6><p>ActivityStack负责“Activity栈”的状态和管理，ActivityStack内部包含了多个任务栈（TaskRecord），TaskRecord内部维护了一个<code>ArrayList&lt;ActivityRecord&gt;</code>用来保存和管理ActivityRecord，ActivityRecord包含了一个Activity的所有信息</p>
+<p>如果我们从桌面点击启动app，桌面就是一个Activity，点击app（按钮）启动我们的启动页Activity，从这里分析Activity的启动流程更加全面，而不是在app中去启动一个普通的Activity。可以分为如下几个流程</p>
+<ol>
+<li><p>Launcher通知AMS启动App的启动页Activity，AMS记录要启动的Activity信息，并且通知Launcher进入pause状态。</p>
+<p>Launcher进入pause状态后，通知AMS已经paused了，可以启动App了</p>
+</li>
+<li><p>如果App未开启过，AMS发送创建进程请求，Zogyte进程接受AMS请求并孵化应用进程，应用进程调用ActivityThread并调用mian()方法，并且main()方法中创建ActivityThread对象，<code>activityThread.attach()</code>方法中进行绑定（应用进程绑定到AMS），传入applicationThread以便通讯。</p>
+</li>
+<li><p>AMS通知App绑定Application（bindApplication）并启动Activity，并且创建和关联Context,最后调用onCreate等方法。</p>
+</li>
+</ol>
+<h6 id="灵魂拷问：AMS，Zogyte，App进程，Launcher如何通信？"><a href="#灵魂拷问：AMS，Zogyte，App进程，Launcher如何通信？" class="headerlink" title="灵魂拷问：AMS，Zogyte，App进程，Launcher如何通信？"></a>灵魂拷问：AMS，Zogyte，App进程，Launcher如何通信？</h6><p>这个问题一旦问出来，能干翻一大堆开发人员，下面来仔细讲讲：</p>
+<p>App进程和AMS是如何通信的？</p>
+<p>Zogyte去fork一个App进程，后面就是应用进程和AMS两者的事情了，我们知道Android的跨进程通信是通过Binder服务的，AMS所在的进程和应用进程在通过Binder互相通信时，实际上都是通过两者的代理类进行通信的。</p>
+<p>ActivityManagerService(AMS)在手机开机后时就已经启动了，应用进程去调用AMS的方法，比如startActivity，很容易调用，因为AMS是一个有名称的Binder服务，在任意地方都可以通过在ServiceManger（SM）里面查询拿到代理类，调用代理类的对应方法，然后再去调用AMS的真正方法。</p>
+<p>![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)</p>
+<p>因为Binder通信是通过代理类来通信的，如果拿不到代理类，其他进程就不知道如何和我们的App通信，系统服务中的AMS也就不知道如何和我们App通信了，所以当App进程创建完成后，会进行设置代理，代理的设置过程如图</p>
+<p>![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)</p>
+<p>就是在<code>ActivityThread.attach(false)</code>方法中，AMS绑定ApplicationThread对象，即应用进程绑定到AMS，<strong>通过调用AMS的attachApplication来将ActivityThread的内部类ApplicationThread对象绑定至AMS，这样AMS就可以通过这个代理对象来控制应用进程</strong>。</p>
+<p>AMS和Launcher是怎么通信的？</p>
+<p>其实Launcher也是一个App，调用startActivity方法，然后调用的是Instrumentation的execStartActivity方法</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> ActivityResult <span class="hljs-title">execStartActivity</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">        Context who, IBinder contextThread, IBinder token, Activity target,</span></span>
+<span class="hljs-function"><span class="hljs-params">        Intent intent, <span class="hljs-keyword">int</span> requestCode, Bundle options)</span> </span>&#123;
+    ...
+    <span class="hljs-keyword">try</span> &#123;
+	   ...
+	    <span class="hljs-comment">//获取AMS的代理对象</span>
+        <span class="hljs-keyword">int</span> result = ActivityManager.getService()
+            .startActivity(whoThread, who.getBasePackageName(), intent,
+                    intent.resolveTypeIfNeeded(who.getContentResolver()),
+                    token, target != <span class="hljs-keyword">null</span> ? target.mEmbeddedID : <span class="hljs-keyword">null</span>,
+                    requestCode, <span class="hljs-number">0</span>, <span class="hljs-keyword">null</span>, options);
+        checkStartActivityResult(result, intent);
+    &#125; <span class="hljs-keyword">catch</span> (RemoteException e) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Failure from system&quot;</span>, e);
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+&#125;
+复制代码</code></pre>
+
+<p>在这个方法会调用ActivityManager的getService方法来得到AMS的代理对象，然后调用这个代理对象的startActivity方法</p>
+<pre><code class="hljs java"><span class="hljs-meta">@UnsupportedAppUsage</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IActivityManager <span class="hljs-title">getService</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> IActivityManagerSingleton.get();
+&#125;
+
+<span class="hljs-meta">@UnsupportedAppUsage</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Singleton&lt;IActivityManager&gt; IActivityManagerSingleton =
+        <span class="hljs-keyword">new</span> Singleton&lt;IActivityManager&gt;() &#123;
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">protected</span> IActivityManager <span class="hljs-title">create</span><span class="hljs-params">()</span> </span>&#123;
+                <span class="hljs-comment">//得到activity的service引用，即IBinder类型的AMS引用</span>
+                <span class="hljs-keyword">final</span> IBinder b = ServiceManager.getService(Context.ACTIVITY_SERVICE);
+				        <span class="hljs-comment">//转换成IActivityManager对象</span>
+                <span class="hljs-keyword">final</span> IActivityManager am = IActivityManager.Stub.asInterface(b);
+                <span class="hljs-keyword">return</span> am;
+            &#125;
+        &#125;;
+复制代码</code></pre>
+
+<p>可以发现在Singleton中的create方法中由于b是AMS引用作为服务端处于SystemServer进程中，与当前Launcher进程作为客户端与服务端不在同一个进程，所以am返回的是IActivityManager.Stub的代理对象，此时如果要实现客户端与服务端进程间的通信，只需要在AMS继承了IActivityManager.Stub类并实现了相应的方法，而通过下面的代码可以发现AMS刚好是继承了IActivityManager.Stub类的，这样Launcher进程作为客户端就拥有了服务端AMS的代理对象，然后就可以调用AMS的方法来实现具体功能了，就这样Launcher的工作就交给AMS实现了。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ActivityManagerService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">IActivityManager</span>.<span class="hljs-title">Stub</span></span>
+<span class="hljs-class">        <span class="hljs-keyword">implements</span> <span class="hljs-title">Watchdog</span>.<span class="hljs-title">Monitor</span>, <span class="hljs-title">BatteryStatsImpl</span>.<span class="hljs-title">BatteryCallback</span> </span>&#123;
+&#125;
+复制代码</code></pre>
+
+<p>Zygote和AMS是如何通信的？</p>
+<p>AMS和Zygote建立Socket连接，然后发送创建应用进程的请求。具体可以参考<a target="_blank" rel="noopener" href="http://liuwangshu.cn/framework/booting/2-zygote.html">这里</a>。</p>
+<p>最后我们再来看看流程图，看下方的App进程启动过程和<code>Activity.startActivity</code>这两个流程</p>
+<p>![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)</p>
+<p>这里还要提到一点，<strong>Hook Activity的启动流程是一个很重要的运用场景</strong>，我们需要欺骗AMS，然后启动真正的TargetActivity，Hook有起始点和终点。这里需要寻找两个地方的hook点，一个是对Intent中Activity的替换（hookIActivityTaskManager方法），一个是对Intent中Activity的还原（hookHandler）。</p>
+<p>在回答Activity的启动流程时，具体的方法如何调用并不重要，所以我才会在最后放出整个流程，各个进程之间如何建立通信，如何通信很重要，同时一些Activity相关概念也很重要，熟悉这些，你就很容易把整个流程串起来了。</p>
+<h4 id="Activity深层次问题"><a href="#Activity深层次问题" class="headerlink" title="Activity深层次问题"></a>Activity深层次问题</h4><h5 id="1-Activity生命周期的变化对进程的优先级有什么影响？"><a href="#1-Activity生命周期的变化对进程的优先级有什么影响？" class="headerlink" title="1.Activity生命周期的变化对进程的优先级有什么影响？"></a>1.Activity生命周期的变化对进程的优先级有什么影响？</h5><p>这里先看一下官网上<a target="_blank" rel="noopener" href="https://developer.android.com/guide/components/activities/process-lifecycle">Activity生命周期</a>上对onStart的一段描述，onStart时候Activity就对用户可见了</p>
+<p>![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)</p>
+<p>同时你也可以在《Android开发艺术探索》上看到类似的描述</p>
+<p>![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)</p>
+<p>但是了解Activity启动流程源码的朋友都知道，ActivityThread的handleResumeActivity方法中，<strong>首先调用Activity的onResume方法，接着会调用Activity.makeVisible()在该方法中，DecorView真正完成了添加和显示这两个过程，到这里Activity的视图才能被看到</strong>。DecoreView和Window进行关联。有兴趣可以看看我这篇文章的<a target="_blank" rel="noopener" href="https://juejin.im/post/6886629660814868488#heading-7">分析</a>。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">makeVisible</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (!mWindowAdded) &#123;
+            ViewManager wm = getWindowManager();
+          	<span class="hljs-comment">//DecoreView和WindowManager进行关联。</span>
+            wm.addView(mDecor, getWindow().getAttributes());
+            mWindowAdded = <span class="hljs-keyword">true</span>;
+        &#125;
+  			<span class="hljs-comment">//设置DecorView可见</span>
+        mDecor.setVisibility(View.VISIBLE);
+    &#125;
+复制代码</code></pre>
+
+<p>也就是说在onResume方法执行之后再调用Activity.makeVisible()方法，我们才能真正用<strong>肉眼</strong>看到我们的DecoreView，看到这里你这里不禁会产生一个疑问，那上面官网上的说法（**<code>onStart()</code> 调用使 Activity 对用户可见**）难道是错误的吗？</p>
+<p>带着疑问我们继续在官网上找答案，在<a target="_blank" rel="noopener" href="https://developer.android.com/guide/components/activities/process-lifecycle">进程和生命周期</a>这一章节上可以看到：</p>
+<p>为了确定在内存不足时应该终止哪些进程，Android 会根据每个进程中运行的组件以及这些组件的状态，将它们放入“重要性层次结构”。这些进程类型包括（<strong>按重要性排序</strong>）：</p>
+<ol>
+<li><strong>前台进程</strong>是用户目前执行操作所需的进程。在不同的情况下，进程可能会因为其所包含的各种应用组件而被视为前台进程。如果以下任一条件成立，则进程会被认为位于前台：</li>
+</ol>
+<ul>
+<li>它正在用户的互动屏幕上运行一个 <code>Activity</code>（其 <code>onResume()</code> 方法已被调用）。</li>
+<li>它有一个 <code>BroadcastReceiver</code> 目前正在运行（其 <code>BroadcastReceiver.onReceive()</code> 方法正在执行）。</li>
+<li>它有一个 <code>Service</code> 目前正在执行其某个回调（<code>Service.onCreate()</code>、<code>Service.onStart()</code> 或 <code>Service.onDestroy()</code>）中的代码。</li>
+</ul>
+<ol>
+<li><p>系统中只有少数此类进程，而且除非内存过低，导致连这些进程都无法继续运行，才会在最后一步终止这些进程。通常，此时设备已达到内存分页状态，因此必须执行此操作才能使用户界面保持响应。</p>
+</li>
+<li><p><strong>可见进程</strong>正在进行用户当前知晓的任务，因此终止该进程会对用户体验造成明显的负面影响。在以下条件下，进程将被视为可见：</p>
+<ul>
+<li>它正在运行的 <code>Activity</code> 在屏幕上对用户可见，但不在前台（其 <code>onPause()</code> 方法已被调用）。举例来说，如果前台 Activity 显示为一个对话框，而这个对话框允许在其后面看到上一个 Activity，则可能会出现这种情况。</li>
+<li>它有一个 <code>Service</code> 正在通过 <code>Service.startForeground()</code>（要求系统将该服务视为用户知晓或基本上对用户可见的服务）作为前台服务运行。</li>
+<li>系统正在使用其托管的服务实现用户知晓的特定功能，例如动态壁纸、输入法服务等。</li>
+</ul>
+<p>相比前台进程，系统中运行的这些进程数量较不受限制，但仍相对受控。这些进程被认为非常重要，除非系统为了使所有前台进程保持运行而需要终止它们，否则不会这么做。</p>
+</li>
+<li><p><strong>服务进程</strong>包含一个已使用 <code>startService()</code> 方法启动的 <code>Service</code> 。虽然用户无法直接看到这些进程，但它们通常正在执行用户关心的任务（例如后台网络数据上传或下载），因此系统会始终使此类进程保持运行，除非没有足够的内存来保留所有前台和可见进程。</p>
+<p>已经运行了很长时间（例如 30 分钟或更长时间）的服务的重要性可能会降位，以使其进程降至下文所述的缓存 LRU 列表。这有助于避免超长时间运行的服务因内存泄露或其他问题占用大量内存，进而妨碍系统有效利用缓存进程。</p>
+</li>
+<li><p><strong>缓存进程</strong>是目前不需要的进程，因此，如果其他地方需要内存，系统可以根据需要自由地终止该进程。在正常运行的系统中，这些是内存管理中涉及的唯一进程：运行良好的系统将始终有多个缓存进程可用（为了更高效地切换应用），并根据需要定期终止最早的进程。只有在非常危急（且具有不良影响）的情况下，系统中的所有缓存进程才会被终止，此时系统必须开始终止服务进程。</p>
+<p>这些进程通常包含用户当前不可见的一个或多个 <code>Activity</code> 实例（<code>onStop()</code> 方法已被调用并返回）。只要它们正确实现其 Activity 生命周期（详情请见 <code>Activity</code>），那么当系统终止此类流程时，就不会影响用户返回该应用时的体验，因为当关联的 Activity 在新的进程中重新创建时，它可以恢复之前保存的状态。</p>
+<p>这些进程保存在伪 LRU 列表中，列表中的最后一个进程是为了回收内存而终止的第一个进程。此列表的确切排序政策是平台的实现细节，但它通常会先尝试保留更多有用的进程（比如托管用户的主屏幕应用、用户最后看到的 Activity 的进程等），再保留其他类型的进程。还可以针对终止进程应用其他政策：比如对允许的进程数量的硬限制，对进程可持续保持缓存状态的时间长短的限制等。</p>
+</li>
+</ol>
+<p>可以看到在屏幕上运行时一个Activity的onResume的方法已被调用，此时处于前台进程；可见进程的一个符合条件：<strong>它正在运行的 <code>Activity</code> 在屏幕上对用户可见，但不在前台</strong>，然后再对比上面对onStart的描述（<code>onStart()</code> 调用使 Activity 对用户可见，因为应用会<strong>为 Activity 进入前台并支持互动做准备</strong>），这下子你就豁然开朗了，这里的<strong>onStart的可见指的是可见进程的可见，而不是真正意义上的肉眼可见</strong>。</p>
+<p>“onPause此方法表示 Activity 不再位于前台（尽管在用户处于多窗口模式时 Activity 仍然可见）”，“如果您的 Activity 不再对用户可见，说明其已进入“已停止”状态，因此系统将调用 <code>onStop()</code> 回调”，以上都是官方的描述，我们可以打印一下手机中的这些进程，使用<code>adb shell dumpsys meminfo</code>命令，设备是android 10华为手机。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cebd5b982f694241866dc10e27b59b9d~tplv-k3u1fbpfcp-watermark.image" srcset="/Blog/img/loading.gif" alt="img"></p>
+<p>可以看到分别对应我们的前台进程，可见进程，服务进程和缓存进程，其中服务进程还分为A Services和B Services。其实远远不止这么多的进程级别区分，我自己的App打开后，然后点击home键退到后台，此时属于<strong>Previous进程</strong>（后台进程）级别（com.jackie.testdialog），如果我打开App后，点击返回键退出，这个时候我的App进程就变成了<strong>Cached进程</strong>级别了。</p>
+<p>讲了这么多，你可能觉得一直没有一个量化的数字，进程的级别（oom_adj）的取值范围是多少，在Android7.0之后，ADJ采用100，200，300等数字。下面是基于android9的区分：</p>
+<table>
+<thead>
+<tr>
+<th>ADJ级别</th>
+<th>取值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NATIVE_ADJ</td>
+<td>-1000</td>
+<td>native进程</td>
+</tr>
+<tr>
+<td>SYSTEM_ADJ</td>
+<td>-900</td>
+<td>仅指system_server进程</td>
+</tr>
+<tr>
+<td>PERSISTENT_PROC_ADJ</td>
+<td>-800</td>
+<td>系统persistent进程</td>
+</tr>
+<tr>
+<td>PERSISTENT_SERVICE_ADJ</td>
+<td>-700</td>
+<td>关联着系统或persistent进程</td>
+</tr>
+<tr>
+<td><code>FOREGROUND_APP_ADJ</code></td>
+<td>0</td>
+<td>前台进程</td>
+</tr>
+<tr>
+<td><code>VISIBLE_APP_ADJ</code></td>
+<td>100</td>
+<td>可见进程</td>
+</tr>
+<tr>
+<td><code>PERCEPTIBLE_APP_ADJ</code></td>
+<td>200</td>
+<td>可感知进程，比如后台音乐播放</td>
+</tr>
+<tr>
+<td>BACKUP_APP_ADJ</td>
+<td>300</td>
+<td>备份进程</td>
+</tr>
+<tr>
+<td>HEAVY_WEIGHT_APP_ADJ</td>
+<td>400</td>
+<td>重量级进程</td>
+</tr>
+<tr>
+<td><code>SERVICE_ADJ</code></td>
+<td>500</td>
+<td>服务进程</td>
+</tr>
+<tr>
+<td>HOME_APP_ADJ</td>
+<td>600</td>
+<td>Home进程</td>
+</tr>
+<tr>
+<td>PREVIOUS_APP_ADJ</td>
+<td>700</td>
+<td>上一个进程</td>
+</tr>
+<tr>
+<td><code>SERVICE_B_ADJ</code></td>
+<td>800</td>
+<td>B List中的Service</td>
+</tr>
+<tr>
+<td><code>CACHED_APP_MIN_ADJ</code></td>
+<td>900</td>
+<td>不可见进程的adj最小值</td>
+</tr>
+<tr>
+<td>CACHED_APP_MAX_ADJ</td>
+<td>906</td>
+<td>不可见进程的adj最大值</td>
+</tr>
+</tbody></table>
+<p>开发者应该减少在保活上花心思，更应该在优化内存上下功夫，因为在相同ADJ级别的情况下，系统会选择优先杀内存占用的进程。当然你也可以手动去测试App的进程级别，不过过程可能有点麻烦，可以参考这篇<a target="_blank" rel="noopener" href="https://juejin.im/post/6891911483379482637#heading-23">文章</a>。</p>
+<p><strong>小结</strong></p>
+<p>当界面只有一个Activity时，它进入onStart和onPause时是可见进程，进入onResume时是前台进程，打开后点击Home键退到后台这个时候是Previous进程（后台进程），如果直接点击返回键退出Activity，这个时候是缓存进程；如果有多个Activity（注意这个时候只有app从后台任务进入前台，或者点击Home键退到后台这两种场景；因为app在前台运行时都是前台进程），栈顶的的Activity进入onStart和onPause时是可见进程，进入onResume后是前台进程，点击Home键退到后台时是Previous进程（大家常说的后台进程）。</p>
+<h5 id="2-如果App还存在缓存进程，这个时候启动App，应用Application的onCreate方法会执行吗？"><a href="#2-如果App还存在缓存进程，这个时候启动App，应用Application的onCreate方法会执行吗？" class="headerlink" title="2.如果App还存在缓存进程，这个时候启动App，应用Application的onCreate方法会执行吗？"></a>2.如果App还存在缓存进程，这个时候启动App，应用Application的onCreate方法会执行吗？</h5><p>如果你点击主界面MainActivity，点击返回键后系统执行MainActivity的onDestory方法，这个时候<strong>App进程为缓存进程，下次启动App你会发现Application的onCreate方法并不会执行</strong>，当然MainActivity的生命周期都会正常执行，这是因为从缓存进程启动App，系统已经缓存了很多信息，很多数据并不会被销毁，onCreate中初始化的那些内容还在，方便用户下次快速启动。利用这一特性，我们的App首次启动速度一般为500<del>600ms，退出App后存在缓存进程的情况下，每次启动的速度一般为200</del>300ms，算是某种程度上提升了App的启动时间。</p>
+<p>需要注意的是，很多App在退出主界面的时候，会手动调用如下代码去退出App</p>
+<pre><code class="hljs java">System.exit(<span class="hljs-number">0</span>);
+复制代码</code></pre>
+
+<p>一旦调用了如下代码，就会彻底的退出并不会利用缓存进程的优势，也失去了系统提供给我们的优化了。</p>
+<h5 id="3-一个Activity-A启动另一个Activity-B，为何会先走A的onPause方法，等到B执行完onResume方法后，才会走A的onStop方法呢？"><a href="#3-一个Activity-A启动另一个Activity-B，为何会先走A的onPause方法，等到B执行完onResume方法后，才会走A的onStop方法呢？" class="headerlink" title="3.一个Activity A启动另一个Activity B，为何会先走A的onPause方法，等到B执行完onResume方法后，才会走A的onStop方法呢？"></a>3.一个Activity A启动另一个Activity B，为何会先走A的onPause方法，等到B执行完onResume方法后，才会走A的onStop方法呢？</h5><p>如果你看过前面两个问题，这个问题你可能已经有答案了。手机之所以进行进程的管理，用不同的优先级对进程进行区分，首先肯定是为了保证用户的流畅体验，对于优先级低且占用内存高的进程及时清理，保证前台进程有足够的运行空间。前面我们讲到处于前台的（获取焦点）界面只有一个，onPause时当前进程离开了前台，当然可能也要进行一些数据的保存，所以肯定需要先执行当前界面的某个方法，然后再执行B界面的onCreate，onStart，onResume是为了新的界面能够被快速呈现（获取焦点），然后再走旧界面A的onStop方法。</p>
+<p>这里也需要注意，onPause方法中尽量不要去做耗时的操作，如果过于耗时，新界面会很久才能显示出来，尽量放在onStop方法中去做。当然onStop中也不能做过于耗时的操作中，前面我们也试过，点击Home键会执行onStop方法，此时App进程处于后台进程，此时进程的优先级的很低的，当内存不足时，onStop中保存数据的操作可能就未完成，然后App进程就被系统回收了。</p>
+<p>关于状态保存和恢复，在API28之前，onSaveInstanceState执行在onStop之前，但不限于在onPause之前或之后；在API28之后，onSaveInstanceState 执行时机已确定为在 <code>onStop</code> 之后。而onRestoreInstanceState确定执行在onStart之后。</p>
+<h5 id="4-为什么要这么设计Activity生命周期"><a href="#4-为什么要这么设计Activity生命周期" class="headerlink" title="4.为什么要这么设计Activity生命周期"></a>4.为什么要这么设计Activity生命周期</h5><p>假如你自己设计界面的生命周期：</p>
+<ul>
+<li>界面启动时候用需要设计一个方法</li>
+<li>界面完全渲染完毕显示需要一个方法</li>
+<li>界面被部分遮盖时/跳到其他界面/退到后台需要一个方法</li>
+<li>界面完全退出销毁时需要一个方法</li>
+</ul>
+<p>这么看来，我们好像只需要onCreate，onResume，onPause，onDestroy这四个方法，但是这只是一个很粗糙的界面创建~退出流程的回调，但是你看看IOS的UIViewController的生命周期，看起来就是个精致的猪猪女孩</p>
+<p>![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)</p>
+<p>这样一对比，连Android的生命周期显得有点粗糙了，其实不全是，Activity还有一系列的<code>onPostXXX</code>方法以及onContentChanged等，但还是没有IOS细腻。其实我觉得，这些生命周期的回调是基于一些场景设计的，从视图的显示到销毁，考虑到不同的需求，我们需要不同程度级别的设计，<strong>如果Android是一个非常简单的系统，也不会实现那么多的特殊需求，可能只需要前面我说的那四个方法就够了，我感觉在生命周期的设计方面，IOS做的更好一些，对开发者更加友好</strong>。</p>
+<p>也有一些人在回答生命周期为什么要这么设计时，可能会这么回答，因为界面需要有个创建/销毁过程，onCreate/onDestroy肯定需要，onStart时进程为可见进程，提升进程的优先级，或者做一些特殊场景的操作，onResume在界面启动完成或者恢复时需要，界面在被透明Activity的覆盖时会执行onPause()，需要有个方法在这个时候做状态保存或特殊操作等，onStop时可以进行状态保存。<strong>这样想问题完全是一种结果倒推的想法，经不起仔细的推敲，一定不要从具体的方法去推场景，而是应该从需求场景开始推导，切记，这一切都是需求或可能的需求引起的</strong>！</p>
+<h4 id="第三方App中一些Activity的设置"><a href="#第三方App中一些Activity的设置" class="headerlink" title="第三方App中一些Activity的设置"></a>第三方App中一些Activity的设置</h4><h5 id="今日头条极速版-新闻界面打开的一些限制"><a href="#今日头条极速版-新闻界面打开的一些限制" class="headerlink" title="今日头条极速版-新闻界面打开的一些限制"></a>今日头条极速版-新闻界面打开的一些限制</h5><p>NewDetailActivity就是我们看到的普通新闻界面，最多只能打开四个，超过四个就会将之前最早的NewDetailActivity关闭，原因很简单，如果无限制的话Activity会越建越多，整个应用越来越卡，影响用户体验。</p>
+<pre><code class="hljs roboconf">TaskRecord&#123;8636<span class="hljs-attribute">d7b #6564 A=com.ss.android.article.lite U=0 StackId=282 sz=5&#125;</span>
+<span class="hljs-attribute">        Run #4</span>: ActivityRecord&#123;8794744 u0 com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.lite</span>/com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.base</span><span class="hljs-variable">.feature</span><span class="hljs-variable">.detail</span>2<span class="hljs-variable">.view</span><span class="hljs-variable">.NewDetailActivity</span> t6564&#125;
+        Run #3: ActivityRecord&#123;8be5248 u0 com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.lite</span>/com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.base</span><span class="hljs-variable">.feature</span><span class="hljs-variable">.detail</span>2<span class="hljs-variable">.view</span><span class="hljs-variable">.NewDetailActivity</span> t6564&#125;
+        Run #2: ActivityRecord&#123;8bd6a09 u0 com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.lite</span>/com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.base</span><span class="hljs-variable">.feature</span><span class="hljs-variable">.detail</span>2<span class="hljs-variable">.view</span><span class="hljs-variable">.NewDetailActivity</span> t6564&#125;
+        Run #1: ActivityRecord&#123;87cc383 u0 com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.lite</span>/com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.base</span><span class="hljs-variable">.feature</span><span class="hljs-variable">.detail</span>2<span class="hljs-variable">.view</span><span class="hljs-variable">.NewDetailActivity</span> t6564&#125;
+        Run #0: ActivityRecord&#123;8bd6b44 u0 com<span class="hljs-variable">.ss</span><span class="hljs-variable">.android</span><span class="hljs-variable">.article</span><span class="hljs-variable">.lite</span>/<span class="hljs-variable">.activity</span><span class="hljs-variable">.SplashActivity</span> t6564&#125;
+复制代码</code></pre>
+
+<p>而且还可以发现这个**今日头条极速版的主页叫SplashActivity，真他么牛逼~**，估计是原来有个SplashActivity界面和MainActivity界面，为了优化快速启动，给用户一个秒开的感觉，移除原来的SplashActivity，直接把MainActivity改名为SplashActivity，然后做主题的替换。</p>
+<p>然后我们看看它的启动模式，启动模式是standard。</p>
+<pre><code class="hljs java">~ » adb shell dumpsys activity | grep SplashActivity                                                             jackie<span class="hljs-meta">@JackieLindeMacBook</span>-Pro
+    baseIntent=Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.ss.android.article.lite/.activity.SplashActivity &#125;
+    baseIntent=Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.sina.weibo/.SplashActivit &#125;
+    baseIntent=Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=cmccwm.mobilemusic/.ui.base.SplashActivity &#125;
+    baseIntent=Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.daimajia.gold/im.juejin.android.ui.SplashActivity &#125;
+      Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.ss.android.article.lite/.activity.SplashActivity bnds=[<span class="hljs-number">544</span>,<span class="hljs-number">149</span>][<span class="hljs-number">796</span>,<span class="hljs-number">458</span>] &#125;
+      mActivityComponent=com.ss.android.article.lite/.activity.SplashActivity
+    mIntent=Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.ss.android.article.lite/.activity.SplashActivity bnds=[<span class="hljs-number">544</span>,<span class="hljs-number">149</span>][<span class="hljs-number">796</span>,<span class="hljs-number">458</span>] &#125;
+     #0 ActivityRecord&#123;8e43505 u0 com.ss.android.article.lite/.activity.SplashActivity t6684&#125; type=standard mode=fullscreen override-mode=undefined  //启动模式是standard
+      intent=&#123;act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.ss.android.article.lite/.activity.SplashActivity&#125;
+      mActivityComponent=com.ss.android.article.lite/.activity.SplashActivity
+      Activities=[ActivityRecord&#123;<span class="hljs-number">8e43505</span> u0 com.ss.android.article.lite/.activity.SplashActivity t6684&#125;]
+        Hist #0: ActivityRecord&#123;8e43505 u0 com.ss.android.article.lite/.activity.SplashActivity t6684&#125;
+          Intent &#123; act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.ss.android.article.lite/.activity.SplashActivity bnds=[<span class="hljs-number">544</span>,<span class="hljs-number">149</span>][<span class="hljs-number">796</span>,<span class="hljs-number">458</span>] &#125;
+        Run #0: ActivityRecord&#123;8e43505 u0 com.ss.android.article.lite/.activity.SplashActivity t6684&#125;
+    mResumedActivity: ActivityRecord&#123;<span class="hljs-number">8e43505</span> u0 com.ss.android.article.lite/.activity.SplashActivity t6684&#125;
+      intent=&#123;act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=com.sina.weibo/.SplashActivity&#125;
+      mActivityComponent=com.sina.weibo/.SplashActivity
+      intent=&#123;act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=<span class="hljs-number">0x10200000</span> cmp=cmccwm.mobilemusic/.ui.base.SplashActivity&#125;
+      mActivityComponent=cmccwm.mobilemusic/.ui.base.SplashActivity
+ ResumedActivity:ActivityRecord&#123;<span class="hljs-number">8e43505</span> u0 com.ss.android.article.lite/.activity.SplashActivity t6684&#125;
+  ResumedActivity: ActivityRecord&#123;<span class="hljs-number">8e43505</span> u0 com.ss.android.article.lite/.activity.SplashActivity t6684&#125;
+复制代码</code></pre>
+
+<p>再来看今日头条的首页的启动模式，它的首页叫MainActivity，用的也是standard。</p>
+<pre><code class="hljs java">adb shell dumpsys activity | grep MainActivity                                                                                                          jackie<span class="hljs-meta">@JackieLindeMacBook</span>-
+      Intent &#123; flg=<span class="hljs-number">0x24008000</span> cmp=com.ss.android.article.news/.activity.MainActivity (has extras) &#125;
+      mActivityComponent=com.ss.android.article.news/.activity.MainActivity
+    mIntent=Intent &#123; flg=<span class="hljs-number">0x24008000</span> cmp=com.ss.android.article.news/.activity.MainActivity (has extras) &#125;
+     #0 ActivityRecord&#123;8fadec6 u0 com.ss.android.article.news/.activity.MainActivity t6685&#125; type=standard mode=fullscreen override-mode=undefined  //standard启动模式
+     #0 ActivityRecord&#123;9130583 u0 cmccwm.mobilemusic/.ui.base.MainActivity t6681&#125; type=standard mode=fullscreen override-mode=undefined
+      Activities=[ActivityRecord&#123;<span class="hljs-number">8f</span>adec6 u0 com.ss.android.article.news/.activity.MainActivity t6685&#125;]
+        Hist #0: ActivityRecord&#123;8fadec6 u0 com.ss.android.article.news/.activity.MainActivity t6685&#125;
+          Intent &#123; flg=<span class="hljs-number">0x24008000</span> cmp=com.ss.android.article.news/.activity.MainActivity (has extras) &#125;
+        Run #0: ActivityRecord&#123;8fadec6 u0 com.ss.android.article.news/.activity.MainActivity t6685&#125;
+    mResumedActivity: ActivityRecord&#123;<span class="hljs-number">8f</span>adec6 u0 com.ss.android.article.news/.activity.MainActivity t6685&#125;
+      Activities=[ActivityRecord&#123;<span class="hljs-number">9130583</span> u0 cmccwm.mobilemusic/.ui.base.MainActivity t6681&#125;, ActivityRecord&#123;<span class="hljs-number">9822</span>b05 u0 cmccwm.mobilemusic/com.migu.music.ui.local.LocalSongsActivity t6681&#125;]
+        Hist #0: ActivityRecord&#123;9130583 u0 cmccwm.mobilemusic/.ui.base.MainActivity t6681&#125;
+          Intent &#123; flg=<span class="hljs-number">0x10000000</span> cmp=cmccwm.mobilemusic/.ui.base.MainActivity (has extras) &#125;
+        Run #0: ActivityRecord&#123;9130583 u0 cmccwm.mobilemusic/.ui.base.MainActivity t6681&#125;
+ ResumedActivity:ActivityRecord&#123;<span class="hljs-number">8f</span>adec6 u0 com.ss.android.article.news/.activity.MainActivity t6685&#125;
+  ResumedActivity: ActivityRecord&#123;<span class="hljs-number">8f</span>adec6 u0 com.ss.android.article.news/.activity.MainActivity t6685&#125;
+复制代码</code></pre>
+
+<p>我在今日头条和今日头条极速版的app中寻找从某个界面点击某个按钮返回到主页的场景，没有发现有这样的场景，或者说很少（可能是我没有发现），前面也说过使用standard标准模式只要是每次被启动都会创建一个新的实例，如果其他界面回到主页的场景多的话，我觉得可能会用singleTop（当要实现类似SingleTask的效果时可以配合flag实现）。场景极少或者没有是它使用standard的原因吧。</p>
+<p>到此，我们对Activity的介绍和分析已经完毕了，喜欢的点个赞和关注吧。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/Blog/2020/11/19/Android-View-%E4%BB%8E%E6%B5%8B%E9%87%8F%E5%B8%83%E5%B1%80%E5%88%B0%E8%A7%A6%E6%91%B8%E5%8F%8D%E9%A6%88/">
+                        <span class="hidden-mobile">Android View 从测量布局到触摸反馈</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>安卓学弟 </span></a> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>ZEKI</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/Blog/js/debouncer.js" ></script>
+<script  src="/Blog/js/events.js" ></script>
+<script  src="/Blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/Blog/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/Blog/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/Blog/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/Blog/js/boot.js" ></script>
+
+
+
+</body>
+</html>
