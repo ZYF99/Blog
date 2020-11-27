@@ -247,12 +247,21 @@
 </blockquote>
 </li>
 </ul>
-<p>当inSampleSize为1时，采样后的图片大小为原始图片大小（不变）；<br>当inSampleSize大于1，如 2 时，采样后的图片宽高均为原来的 1/2 。像素数自然变为原来了 1/4，自然其内存占用也为原来的 1/4<br>####举个栗子<br>一张1024 * 1024像素的图片，采用ARGB8888格式存储，内存占有率就为1024 * 1024 * 4(4MB)，如果将 inSampleSize 调整为2，采样后的图片像素变为 512 * 512，内存变为 512 * 512 * 4（1MB）<br>发现：（像素、内存占用）缩放比例均变为原来的 <code>1/(inSampleSize^2)</code><br>另外<br><strong>官方指出：inSampleSize的取值应为 2 的指数，如果传的不是 2 的指数，系统将向下选择一个最近的2的指数作值（实验证明：当作建议即可）</strong><br>###步骤</p>
+<p>当inSampleSize为1时，采样后的图片大小为原始图片大小（不变）；<br>当inSampleSize大于1，如 2 时，采样后的图片宽高均为原来的 1/2 。像素数自然变为原来了 1/4，自然其内存占用也为原来的 1/4<br>####举个栗子<br>一张1024 * 1024像素的图片，采用ARGB8888格式存储，内存占有率就为1024 * 1024 * 4(4MB)，如果将 inSampleSize 调整为2，采样后的图片像素变为 512 * 512，内存变为 512 * 512 * 4（1MB）<br>发现：（像素、内存占用）缩放比例均变为原来的 <code>1/(inSampleSize^2)</code><br>另外 </p>
+<p><strong>官方指出：inSampleSize的取值应为 2 的指数，如果传的不是 2 的指数，系统将向下选择一个最近的2的指数作值（实验证明：当作建议即可）</strong></p>
+<p>###步骤</p>
 <ol>
-<li>将BitmapFactory.Options的 <code>inJustDecodeBounds</code> 参数设置为true并加载图片</li>
-<li>从BitmapFactory.options中取出图片的原始宽高信息，对应 <code>outWidth</code> 和 <code>outHeight</code></li>
-<li>根据采样率规则并结合目标View所需大小计算出采样率 <code>inSampleSize</code></li>
-<li>将BitmapFactory.options 的 <code>inJustDecodeBounds</code> 设置为false，然后重新加载图片<br>####代码<pre><code class="hljs reasonml">    public static Bitmap decode<span class="hljs-constructor">SampleBitmapFromResource(Resources <span class="hljs-params">res</span>, <span class="hljs-params">int</span> <span class="hljs-params">resId</span>, <span class="hljs-params">int</span> <span class="hljs-params">reqWidth</span>, <span class="hljs-params">int</span> <span class="hljs-params">reqHeight</span>)</span> &#123;
+<li><p>将BitmapFactory.Options的 <code>inJustDecodeBounds</code> 参数设置为true并加载图片</p>
+</li>
+<li><p>从BitmapFactory.options中取出图片的原始宽高信息，对应 <code>outWidth</code> 和 <code>outHeight</code></p>
+</li>
+<li><p>根据采样率规则并结合目标View所需大小计算出采样率 <code>inSampleSize</code></p>
+</li>
+<li><p>将BitmapFactory.options 的 <code>inJustDecodeBounds</code> 设置为false，然后重新加载图片</p>
+</li>
+</ol>
+<p>  ####代码</p>
+<pre><code class="hljs reasonml">    public static Bitmap decode<span class="hljs-constructor">SampleBitmapFromResource(Resources <span class="hljs-params">res</span>, <span class="hljs-params">int</span> <span class="hljs-params">resId</span>, <span class="hljs-params">int</span> <span class="hljs-params">reqWidth</span>, <span class="hljs-params">int</span> <span class="hljs-params">reqHeight</span>)</span> &#123;
         final BitmapFactory.Options options = <span class="hljs-keyword">new</span> BitmapFactory.<span class="hljs-constructor">Options()</span>;
         options.inJustDecodeBounds = <span class="hljs-literal">true</span>;
         <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BitmapFactory</span>.</span></span>decode<span class="hljs-constructor">Resource(<span class="hljs-params">res</span>, <span class="hljs-params">resId</span>, <span class="hljs-params">options</span>)</span>;
@@ -284,8 +293,6 @@ mImageView.set<span class="hljs-constructor">ImageBitmap(<span class="hljs-param
 <blockquote>
 <p>注意：当inJustDecodeBounds为true时，BitmapFactory只会解析图的原始宽/高信息，并不会真的获取图片，所以这个操作很轻量。另外这时候获取到的宽高信息与图片的位置以及程序运行的设备有关，同一张drawable目录下的图片在不同屏幕密度的设备上可能得到不同的结果。这与Android资源加载机制有关，这一点平时开发的时候应该也注意到了。</p>
 </blockquote>
-</li>
-</ol>
 
             </div>
             <hr>
