@@ -227,9 +227,8 @@
             <h1 style="display: none">BottomSheetBehavior+ViewPager+多RecyclerView 滑动冲突（滑动弹出隐藏）终极解决方案</h1>
             
             <div class="markdown-body">
-              <p>##最终效果<br><img src="https://upload-images.jianshu.io/upload_images/17794320-594fb17b92a0442c.gif?imageMogr2/auto-orient/strip" srcset="/Blog/img/loading.gif" alt="滑动冲突_1.gif"><br><img src="https://upload-images.jianshu.io/upload_images/17794320-6cd28b3ea12d2cf7.gif?imageMogr2/auto-orient/strip" srcset="/Blog/img/loading.gif" alt="滑动冲突_2.gif"></p>
-<p>#使用BottomSheetBehavior引发的问题</p>
-<p>##问题1：BottomSheetBehavior+ViewPager+多页RecyclerView组合，只有第一页列表可滑动<br>在<code>CoordinatorLayout</code>中对弹出的<code>ViewGroup</code>直接使用 <code>com.google.android.material.bottomsheet.BottomSheetBehavior</code>，本身是没有问题的，但当我们嵌套了<code>ViewPager</code>+多页<code>RecyclerView</code>这个组合，就会导致只有第一页<code>RecyclerView</code>能滑动，其余页的滑动事件全部被<code>behavior</code>处理掉了，也就是滑动全部成为了弹出隐藏你得弹出框，很显然，列表是需要先于弹出框消费滑动的，于是我们看看<code>BottomSheetBehavior</code>的源码，如下：</p>
+              <h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><p><img src="https://upload-images.jianshu.io/upload_images/17794320-594fb17b92a0442c.gif?imageMogr2/auto-orient/strip" srcset="/Blog/img/loading.gif" alt="滑动冲突_1.gif"><br><img src="https://upload-images.jianshu.io/upload_images/17794320-6cd28b3ea12d2cf7.gif?imageMogr2/auto-orient/strip" srcset="/Blog/img/loading.gif" alt="滑动冲突_2.gif"></p>
+<h1 id="使用BottomSheetBehavior引发的问题"><a href="#使用BottomSheetBehavior引发的问题" class="headerlink" title="使用BottomSheetBehavior引发的问题"></a>使用BottomSheetBehavior引发的问题</h1><h2 id="问题1：BottomSheetBehavior-ViewPager-多页RecyclerView组合，只有第一页列表可滑动"><a href="#问题1：BottomSheetBehavior-ViewPager-多页RecyclerView组合，只有第一页列表可滑动" class="headerlink" title="问题1：BottomSheetBehavior+ViewPager+多页RecyclerView组合，只有第一页列表可滑动"></a>问题1：BottomSheetBehavior+ViewPager+多页RecyclerView组合，只有第一页列表可滑动</h2><p>在<code>CoordinatorLayout</code>中对弹出的<code>ViewGroup</code>直接使用 <code>com.google.android.material.bottomsheet.BottomSheetBehavior</code>，本身是没有问题的，但当我们嵌套了<code>ViewPager</code>+多页<code>RecyclerView</code>这个组合，就会导致只有第一页<code>RecyclerView</code>能滑动，其余页的滑动事件全部被<code>behavior</code>处理掉了，也就是滑动全部成为了弹出隐藏你得弹出框，很显然，列表是需要先于弹出框消费滑动的，于是我们看看<code>BottomSheetBehavior</code>的源码，如下：</p>
 <pre><code class="hljs pgsql">@Nullable
 @VisibleForTesting
 <span class="hljs-keyword">View</span> findScrollingChild(<span class="hljs-keyword">View</span> <span class="hljs-keyword">view</span>) &#123;
@@ -278,7 +277,7 @@
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">null</span>;
 &#125;</code></pre>
 <p>第一个问题解决了~</p>
-<p>##问题2：滑动事件全部被 <code>RecyclerView</code> 消费掉，滑动弹出和关闭功能消失了<br>导致这个问题的原因也很简单，我们的滑动事件在 <code>RecyclerView</code> 加入前，都是由 <code>BottomSheetBehavior</code> 来消费的，当我们加入 <code>RecyclerView</code> 这种可滑动控件后，滑动事件都被其消费，这与 <code>ViewPager</code> 无关。</p>
+<h2 id="问题2：滑动事件全部被-RecyclerView-消费掉，滑动弹出和关闭功能消失了"><a href="#问题2：滑动事件全部被-RecyclerView-消费掉，滑动弹出和关闭功能消失了" class="headerlink" title="问题2：滑动事件全部被 RecyclerView 消费掉，滑动弹出和关闭功能消失了"></a>问题2：滑动事件全部被 <code>RecyclerView</code> 消费掉，滑动弹出和关闭功能消失了</h2><p>导致这个问题的原因也很简单，我们的滑动事件在 <code>RecyclerView</code> 加入前，都是由 <code>BottomSheetBehavior</code> 来消费的，当我们加入 <code>RecyclerView</code> 这种可滑动控件后，滑动事件都被其消费，这与 <code>ViewPager</code> 无关。</p>
 <blockquote>
 <p>多数情况下我们需要 <code>RecyclerView</code> 消费事件（滑动），但我们同时希望当 <code>RecyclerView</code> 滑动到顶部时，将事件又重新交给 <code>Behavior</code> 消费，这样就可以做到，列表在顶部时滑动开启/关闭弹出框<br>实现需要分为以下几步</p>
 </blockquote>
@@ -375,8 +374,7 @@ binding.rvList.add<span class="hljs-constructor">OnScrollListener(<span class="h
         &#125;
     &#125;
 &#125;);</code></pre>
-<p>##贴上完整的MyViewPagerBottomSheetBehavior</p>
-<pre><code class="hljs java"><span class="hljs-keyword">package</span> com.xxx.wordingtech.ui.widget;
+<h2 id="贴上完整的MyViewPagerBottomSheetBehavior"><a href="#贴上完整的MyViewPagerBottomSheetBehavior" class="headerlink" title="贴上完整的MyViewPagerBottomSheetBehavior"></a>贴上完整的MyViewPagerBottomSheetBehavior</h2><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.xxx.wordingtech.ui.widget;
 
 <span class="hljs-keyword">import</span> com.google.android.material.R;
 
