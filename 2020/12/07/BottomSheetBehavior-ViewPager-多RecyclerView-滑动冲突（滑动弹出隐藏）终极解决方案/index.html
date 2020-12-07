@@ -1,0 +1,2403 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/Blog/img/favicon.png">
+  <link rel="icon" type="image/png" href="/Blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>BottomSheetBehavior+ViewPager+多RecyclerView 滑动冲突（滑动弹出隐藏）终极解决方案 - ZEKI SPACE</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/Blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/Blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"github.com","root":"/Blog/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/Blog/js/utils.js" ></script>
+  <script  src="/Blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/Blog/">&nbsp;<strong>安卓学弟 ZEKI</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/Blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/Blog/img/bg/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="BottomSheetBehavior+ViewPager+多RecyclerView 滑动冲突（滑动弹出隐藏）终极解决方案">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-07 11:47" pubdate>
+        2020年12月7日 中午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      147
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">BottomSheetBehavior+ViewPager+多RecyclerView 滑动冲突（滑动弹出隐藏）终极解决方案</h1>
+            
+            <div class="markdown-body">
+              <p>##最终效果<br><img src="https://upload-images.jianshu.io/upload_images/17794320-594fb17b92a0442c.gif?imageMogr2/auto-orient/strip" srcset="/Blog/img/loading.gif" alt="滑动冲突_1.gif"><br><img src="https://upload-images.jianshu.io/upload_images/17794320-6cd28b3ea12d2cf7.gif?imageMogr2/auto-orient/strip" srcset="/Blog/img/loading.gif" alt="滑动冲突_2.gif"></p>
+<p>#使用BottomSheetBehavior引发的问题</p>
+<p>##问题1：BottomSheetBehavior+ViewPager+多页RecyclerView组合，只有第一页列表可滑动<br>在<code>CoordinatorLayout</code>中对弹出的<code>ViewGroup</code>直接使用 <code>com.google.android.material.bottomsheet.BottomSheetBehavior</code>，本身是没有问题的，但当我们嵌套了<code>ViewPager</code>+多页<code>RecyclerView</code>这个组合，就会导致只有第一页<code>RecyclerView</code>能滑动，其余页的滑动事件全部被<code>behavior</code>处理掉了，也就是滑动全部成为了弹出隐藏你得弹出框，很显然，列表是需要先于弹出框消费滑动的，于是我们看看<code>BottomSheetBehavior</code>的源码，如下：</p>
+<pre><code class="hljs pgsql">@Nullable
+@VisibleForTesting
+<span class="hljs-keyword">View</span> findScrollingChild(<span class="hljs-keyword">View</span> <span class="hljs-keyword">view</span>) &#123;
+  <span class="hljs-keyword">if</span> (ViewCompat.isNestedScrollingEnabled(<span class="hljs-keyword">view</span>)) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">view</span>;
+  &#125;
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">view</span> instanceof ViewGroup) &#123;
+    ViewGroup <span class="hljs-keyword">group</span> = (ViewGroup) <span class="hljs-keyword">view</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>, count = <span class="hljs-keyword">group</span>.getChildCount(); i &lt; count; i++) &#123;
+      <span class="hljs-keyword">View</span> scrollingChild = findScrollingChild(<span class="hljs-keyword">group</span>.getChildAt(i));
+      <span class="hljs-keyword">if</span> (scrollingChild != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">return</span> scrollingChild;
+      &#125;
+    &#125;
+  &#125;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+&#125;</code></pre>
+<blockquote>
+<p> 关键的一段代码，在寻找滑动<code>View</code>的时候，对<code>ViewGroup</code>的<code>子View</code>进行了遍历，再递归的寻找<code>子View</code>下可滑动的控件，当找到第一个可滑动控件时，将其返回，作为消费滑动事件的控件。<br> 这里就明白了只有第一个<code>RecyclerView</code>能滑动的原因：无论<code>findScrollingChild</code>什么时机被触发，永远都只会返回<code>ViewPager</code>的第一页中的<code>RecyclerView</code>。知道了原因，修改就很简单了：将<code>ViewPager</code>拿出来，单独进行一波单独遍历。那么我们新建一个<code>MyViewPagerBottomSheetBehavior.java</code>，将<code>BottomSheetBehavior</code>代码拷贝，改造<code>findScrollingChild</code>后如下：</p>
+</blockquote>
+<pre><code class="hljs gauss"><span class="hljs-comment">@Nullable</span>
+<span class="hljs-comment">@</span>VisibleForTesting
+<span class="hljs-built_in">View</span> <span class="hljs-built_in">findScrollingChild</span>(<span class="hljs-built_in">View</span> <span class="hljs-built_in">view</span>) &#123;
+    <span class="hljs-keyword">if</span> (ViewCompat.isNestedScrollingEnabled(<span class="hljs-built_in">view</span>)) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">view</span>;
+    &#125;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">view</span> instanceof ViewPager) &#123;
+        ViewPager viewPager = (ViewPager) <span class="hljs-built_in">view</span>;
+        <span class="hljs-built_in">View</span> currentViewPagerChild = ViewPagerUtils.getCurrentView(viewPager); <span class="hljs-comment">//通过ViewPagerUtils找到当前在界面上的页面</span>
+        <span class="hljs-built_in">View</span> scrollingChild = <span class="hljs-built_in">findScrollingChild</span>(currentViewPagerChild);
+        <span class="hljs-keyword">if</span> (scrollingChild != <span class="hljs-built_in">null</span>) &#123;
+            <span class="hljs-keyword">return</span> scrollingChild;
+        &#125;
+        <span class="hljs-keyword">return</span> currentViewPagerChild;
+    &#125;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">view</span> instanceof ViewGroup) &#123;
+        ViewGroup group = (ViewGroup) <span class="hljs-built_in">view</span>;
+        <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">0</span>, count = group.<span class="hljs-built_in">getChildCount</span>(); i &lt; count; i++) &#123;
+            View scrollingChild = findScrollingChild(group.<span class="hljs-built_in">getChildAt</span>(i));
+            <span class="hljs-keyword">if</span> (scrollingChild != <span class="hljs-built_in">null</span>) &#123;
+                <span class="hljs-keyword">return</span> scrollingChild;
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">null</span>;
+&#125;</code></pre>
+<p>第一个问题解决了~</p>
+<p>##问题2：滑动事件全部被 <code>RecyclerView</code> 消费掉，滑动弹出和关闭功能消失了<br>导致这个问题的原因也很简单，我们的滑动事件在 <code>RecyclerView</code> 加入前，都是由 <code>BottomSheetBehavior</code> 来消费的，当我们加入 <code>RecyclerView</code> 这种可滑动控件后，滑动事件都被其消费，这与 <code>ViewPager</code> 无关。</p>
+<blockquote>
+<p>多数情况下我们需要 <code>RecyclerView</code> 消费事件（滑动），但我们同时希望当 <code>RecyclerView</code> 滑动到顶部时，将事件又重新交给 <code>Behavior</code> 消费，这样就可以做到，列表在顶部时滑动开启/关闭弹出框<br>实现需要分为以下几步</p>
+</blockquote>
+<ul>
+<li>为 <code>Behavior</code> 添加 <code>Flag</code> ，标记列表是否滑动到最顶端<br>由于需要适配ViewPager多页情况，一个Flag不能解决，需要一个HashMap，将页数与Flag关联起来<pre><code class="hljs lasso"><span class="hljs-comment">//针对viewpager联动</span>
+<span class="hljs-built_in">boolean</span> isFirstFind = <span class="hljs-literal">true</span>; <span class="hljs-comment">//第一次寻找联动View，为viewPager添加滑动监听</span>
+<span class="hljs-keyword">private</span> HashMap&lt;<span class="hljs-built_in">Integer</span>, <span class="hljs-built_in">Boolean</span>&gt; isScrollViewOnTopMap = <span class="hljs-literal">new</span> HashMap&lt;&gt;(); <span class="hljs-comment">//关联页数与能否滑动flag的Map</span>
+<span class="hljs-keyword">private</span> View globalView;<span class="hljs-comment">//保存下来的view，方便刷新寻找滑动控件时使用</span>
+<span class="hljs-keyword">private</span> int currentPagePosition = <span class="hljs-number">0</span>; <span class="hljs-comment">//当前ViewPager的页数</span>
+@Nullable
+@VisibleForTesting
+View findScrollingChild(View view) &#123;
+ <span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span>..
+ &#125;</code></pre></li>
+<li>定义一个刷新滑动控件的方法，仅供 <code>MyViewPagerBehavior</code> 内部使用<pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">notifyScrollView</span>(<span class="hljs-params"></span>)</span> &#123;
+    nestedScrollingChildRef = <span class="hljs-keyword">new</span> WeakReference&lt;&gt;(findScrollingChild(globalView));
+&#125;</code></pre></li>
+<li>从<code>MyViewPagerBehavior</code>内对外暴露一个设置<code>Flag</code>的方法<pre><code class="hljs reasonml">public void set<span class="hljs-constructor">CurrentScrollViewOnTop(<span class="hljs-params">boolean</span> <span class="hljs-params">scrollViewOnTop</span>)</span> &#123;
+    isScrollViewOnTopMap.put(currentPagePosition, scrollViewOnTop);
+    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(<span class="hljs-string">&quot;~~~~~~~~~&quot;</span>,isScrollViewOnTopMap.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>);
+    notify<span class="hljs-constructor">ScrollView()</span>;
+&#125;</code></pre></li>
+<li>更改 <code>findScrollingChild(View view)</code> 方法，适配列表在顶部时，滑动由 <code>behavior</code> 处理<pre><code class="hljs reasonml">@Nullable
+@VisibleForTesting
+View find<span class="hljs-constructor">ScrollingChild(View <span class="hljs-params">view</span>)</span> &#123;
+    <span class="hljs-keyword">if</span>(view==null)&#123;
+        return null;
+    &#125;
+    globalView = view; <span class="hljs-comment">//为全局view赋值</span>
+    boolean b = isScrollViewOnTopMap.get<span class="hljs-constructor">OrDefault(<span class="hljs-params">currentPagePosition</span>,<span class="hljs-params">false</span> )</span>;<span class="hljs-comment">//列表是否处于顶部</span>
+    <span class="hljs-keyword">if</span> (b) &#123;<span class="hljs-comment">//处于顶部，返回null，代表内部滑动控件不消费任何滑动事件，交由behavior处理</span>
+        return null;
+    &#125;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ViewCompat</span>.</span></span>is<span class="hljs-constructor">NestedScrollingEnabled(<span class="hljs-params">view</span>)</span>) &#123;
+        return view;
+    &#125;
+    <span class="hljs-keyword">if</span> (view instanceof ViewPager) &#123;
+        ViewPager viewPager = (ViewPager) view;
+        <span class="hljs-keyword">if</span> (isFirstFind) &#123;<span class="hljs-comment">//初次寻找滑动view，添加viewpager翻页监听</span>
+            <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Objects</span>.</span></span>require<span class="hljs-constructor">NonNull(<span class="hljs-params">viewPager</span>.<span class="hljs-params">getAdapter</span>()</span>).get<span class="hljs-constructor">Count()</span>; i++) &#123;
+                isScrollViewOnTopMap.put(i,<span class="hljs-literal">true</span>); <span class="hljs-comment">//将所有顶部标记置为false，默认不在顶部</span>
+            &#125;
+            viewPager.add<span class="hljs-constructor">OnPageChangeListener(<span class="hljs-params">new</span> ViewPager.OnPageChangeListener()</span> &#123;
+                @Override
+                public void on<span class="hljs-constructor">PageScrolled(<span class="hljs-params">int</span> <span class="hljs-params">position</span>, <span class="hljs-params">float</span> <span class="hljs-params">positionOffset</span>, <span class="hljs-params">int</span> <span class="hljs-params">positionOffsetPixels</span>)</span> &#123;
+                    <span class="hljs-comment">//翻页后，将现在的页数更新</span>
+                    currentPagePosition = position;
+                &#125;
+
+                @Override
+                public void on<span class="hljs-constructor">PageSelected(<span class="hljs-params">int</span> <span class="hljs-params">position</span>)</span> &#123;
+
+                &#125;
+
+                @Override
+                public void on<span class="hljs-constructor">PageScrollStateChanged(<span class="hljs-params">int</span> <span class="hljs-params">state</span>)</span> &#123;
+
+                &#125;
+            &#125;);
+            isFirstFind = <span class="hljs-literal">false</span>;
+        &#125;
+        View currentViewPagerChild = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ViewPagerUtils</span>.</span></span>get<span class="hljs-constructor">CurrentView(<span class="hljs-params">viewPager</span>)</span>; <span class="hljs-comment">//找到ViewPager当前的view</span>
+        View scrollingChild = find<span class="hljs-constructor">ScrollingChild(<span class="hljs-params">currentViewPagerChild</span>)</span>;
+        <span class="hljs-keyword">if</span> (scrollingChild != null) &#123;
+            return scrollingChild;
+        &#125;
+        return currentViewPagerChild;
+    &#125;</code></pre></li>
+<li>监听 <code>RecyclerView</code> 滑动，在对顶部时，通知 <code>Behavior</code><br>这是在Fragment或者Activity中，你得behavior一定要自己去取，可能就在你得 <code>Fragment/Activity</code> 中通过<code>MyViewPagerBehavior.from()</code>就能获取,也可能你要从其他 <code>Activity</code> 和 <code>Fragment</code> 注入进来，具体只有你自己了解；不要忘了：<ul>
+<li>behavior变量类型一定要写刚才创建的 <code>MyViewPagerBottomSheetBehavior</code></li>
+<li>xml中更换behavior为 <code>MyViewPagerBottomSheetBehavior</code></li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs reasonml"><span class="hljs-comment">//上拉加载</span>
+binding.rvList.add<span class="hljs-constructor">OnScrollListener(<span class="hljs-params">new</span> RecyclerView.OnScrollListener()</span> &#123;
+    @Override
+    public void on<span class="hljs-constructor">Scrolled(@NonNull RecyclerView <span class="hljs-params">recyclerView</span>, <span class="hljs-params">int</span> <span class="hljs-params">dx</span>, <span class="hljs-params">int</span> <span class="hljs-params">dy</span>)</span> &#123;
+        <span class="hljs-keyword">if</span> (behavior != null) &#123;
+            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(<span class="hljs-string">&quot;!!!!!!!!!&quot;</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">String</span>.</span></span>value<span class="hljs-constructor">Of(!<span class="hljs-params">recyclerView</span>.<span class="hljs-params">canScrollVertically</span>(-1)</span>) + dy);
+            <span class="hljs-keyword">if</span> (dy<span class="hljs-operator"> == </span><span class="hljs-number">0</span>) &#123;
+                <span class="hljs-comment">//指尖未真实上下滑动（针对从viewpager其他页面切换过来时），不做任何操作</span>
+                return;
+            &#125;
+            <span class="hljs-keyword">if</span> (!recyclerView.can<span class="hljs-constructor">ScrollVertically(-1)</span><span class="hljs-operator"> &amp;&amp; </span>dy &lt; <span class="hljs-number">0</span>) &#123;
+                <span class="hljs-comment">//不可以下拉，并且手势是下拉，通知behavior已经列表已经在顶部了</span>
+                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Log</span>.</span></span>d(<span class="hljs-string">&quot;~~~~~&quot;</span>, <span class="hljs-string">&quot;划不动了&quot;</span>);
+                behavior.set<span class="hljs-constructor">CurrentScrollViewOnTop(<span class="hljs-params">true</span>)</span>;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-comment">//可以下拉或者手势不是下拉，通知behavior已经列表不在顶部</span>
+                behavior.set<span class="hljs-constructor">CurrentScrollViewOnTop(<span class="hljs-params">false</span>)</span>;
+            &#125;
+        &#125;
+    &#125;
+&#125;);</code></pre>
+<p>##贴上完整的MyViewPagerBottomSheetBehavior</p>
+<pre><code class="hljs java"><span class="hljs-keyword">package</span> com.xxx.wordingtech.ui.widget;
+
+<span class="hljs-keyword">import</span> com.google.android.material.R;
+
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+
+<span class="hljs-keyword">import</span> android.animation.ValueAnimator;
+<span class="hljs-keyword">import</span> android.animation.ValueAnimator.AnimatorUpdateListener;
+<span class="hljs-keyword">import</span> android.annotation.SuppressLint;
+<span class="hljs-keyword">import</span> android.content.Context;
+<span class="hljs-keyword">import</span> android.content.res.ColorStateList;
+<span class="hljs-keyword">import</span> android.content.res.TypedArray;
+<span class="hljs-keyword">import</span> android.os.Build;
+<span class="hljs-keyword">import</span> android.os.Build.VERSION;
+<span class="hljs-keyword">import</span> android.os.Build.VERSION_CODES;
+<span class="hljs-keyword">import</span> android.os.Parcel;
+<span class="hljs-keyword">import</span> android.os.Parcelable;
+
+<span class="hljs-keyword">import</span> androidx.annotation.FloatRange;
+<span class="hljs-keyword">import</span> androidx.annotation.IntDef;
+<span class="hljs-keyword">import</span> androidx.annotation.NonNull;
+<span class="hljs-keyword">import</span> androidx.annotation.Nullable;
+<span class="hljs-keyword">import</span> androidx.annotation.RestrictTo;
+<span class="hljs-keyword">import</span> androidx.annotation.VisibleForTesting;
+<span class="hljs-keyword">import</span> androidx.core.math.MathUtils;
+<span class="hljs-keyword">import</span> androidx.core.view.ViewCompat;
+<span class="hljs-keyword">import</span> androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+<span class="hljs-keyword">import</span> androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
+<span class="hljs-keyword">import</span> androidx.core.view.accessibility.AccessibilityViewCommand;
+
+<span class="hljs-keyword">import</span> android.util.AttributeSet;
+<span class="hljs-keyword">import</span> android.util.Log;
+<span class="hljs-keyword">import</span> android.util.Pair;
+<span class="hljs-keyword">import</span> android.util.TypedValue;
+<span class="hljs-keyword">import</span> android.view.MotionEvent;
+<span class="hljs-keyword">import</span> android.view.VelocityTracker;
+<span class="hljs-keyword">import</span> android.view.View;
+<span class="hljs-keyword">import</span> android.view.ViewConfiguration;
+<span class="hljs-keyword">import</span> android.view.ViewGroup;
+<span class="hljs-keyword">import</span> android.view.ViewParent;
+<span class="hljs-keyword">import</span> android.view.WindowInsets;
+
+<span class="hljs-keyword">import</span> androidx.coordinatorlayout.widget.CoordinatorLayout;
+<span class="hljs-keyword">import</span> androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams;
+<span class="hljs-keyword">import</span> androidx.customview.view.AbsSavedState;
+<span class="hljs-keyword">import</span> androidx.customview.widget.ViewDragHelper;
+<span class="hljs-keyword">import</span> androidx.viewpager.widget.ViewPager;
+<span class="hljs-keyword">import</span> androidx.viewpager.widget.ViewPagerUtils;
+
+<span class="hljs-keyword">import</span> com.google.android.material.bottomsheet.BottomSheetBehavior;
+<span class="hljs-keyword">import</span> com.google.android.material.resources.MaterialResources;
+<span class="hljs-keyword">import</span> com.google.android.material.shape.MaterialShapeDrawable;
+<span class="hljs-keyword">import</span> com.google.android.material.shape.ShapeAppearanceModel;
+
+<span class="hljs-keyword">import</span> java.lang.annotation.Retention;
+<span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;
+<span class="hljs-keyword">import</span> java.lang.ref.WeakReference;
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.HashMap;
+<span class="hljs-keyword">import</span> java.util.HashSet;
+<span class="hljs-keyword">import</span> java.util.Map;
+<span class="hljs-keyword">import</span> java.util.Objects;
+
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyViewPagerBottomSheetBehavior</span>&lt;<span class="hljs-title">V</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">View</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">CoordinatorLayout</span>.<span class="hljs-title">Behavior</span>&lt;<span class="hljs-title">V</span>&gt; </span>&#123;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Callback for monitoring events about bottom sheets.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BottomSheetCallback</span> </span>&#123;
+
+        <span class="hljs-comment">/**</span>
+<span class="hljs-comment">         * Called when the bottom sheet changes its state.</span>
+<span class="hljs-comment">         *</span>
+<span class="hljs-comment">         * <span class="hljs-doctag">@param</span> bottomSheet The bottom sheet view.</span>
+<span class="hljs-comment">         * <span class="hljs-doctag">@param</span> newState    The new state. This will be one of &#123;<span class="hljs-doctag">@link</span> #STATE_DRAGGING&#125;, &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">         *                    #STATE_SETTLING&#125;, &#123;<span class="hljs-doctag">@link</span> #STATE_EXPANDED&#125;, &#123;<span class="hljs-doctag">@link</span> #STATE_COLLAPSED&#125;, &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">         *                    #STATE_HIDDEN&#125;, or &#123;<span class="hljs-doctag">@link</span> #STATE_HALF_EXPANDED&#125;.</span>
+<span class="hljs-comment">         */</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onStateChanged</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View bottomSheet, <span class="hljs-meta">@State</span> <span class="hljs-keyword">int</span> newState)</span></span>;
+
+        <span class="hljs-comment">/**</span>
+<span class="hljs-comment">         * Called when the bottom sheet is being dragged.</span>
+<span class="hljs-comment">         *</span>
+<span class="hljs-comment">         * <span class="hljs-doctag">@param</span> bottomSheet The bottom sheet view.</span>
+<span class="hljs-comment">         * <span class="hljs-doctag">@param</span> slideOffset The new offset of this bottom sheet within [-1,1] range. Offset increases</span>
+<span class="hljs-comment">         *                    as this bottom sheet is moving upward. From 0 to 1 the sheet is between collapsed and</span>
+<span class="hljs-comment">         *                    expanded states and from -1 to 0 it is between hidden and collapsed states.</span>
+<span class="hljs-comment">         */</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onSlide</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View bottomSheet, <span class="hljs-keyword">float</span> slideOffset)</span></span>;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * The bottom sheet is dragging.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> STATE_DRAGGING = <span class="hljs-number">1</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * The bottom sheet is settling.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> STATE_SETTLING = <span class="hljs-number">2</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * The bottom sheet is expanded.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> STATE_EXPANDED = <span class="hljs-number">3</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * The bottom sheet is collapsed.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> STATE_COLLAPSED = <span class="hljs-number">4</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * The bottom sheet is hidden.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> STATE_HIDDEN = <span class="hljs-number">5</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * The bottom sheet is half-expanded (used when mFitToContents is false).</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> STATE_HALF_EXPANDED = <span class="hljs-number">6</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@hide</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@RestrictTo(LIBRARY_GROUP)</span>
+    <span class="hljs-meta">@IntDef(&#123;</span>
+<span class="hljs-meta">            STATE_EXPANDED,</span>
+<span class="hljs-meta">            STATE_COLLAPSED,</span>
+<span class="hljs-meta">            STATE_DRAGGING,</span>
+<span class="hljs-meta">            STATE_SETTLING,</span>
+<span class="hljs-meta">            STATE_HIDDEN,</span>
+<span class="hljs-meta">            STATE_HALF_EXPANDED</span>
+<span class="hljs-meta">    &#125;)</span>
+    <span class="hljs-meta">@Retention(RetentionPolicy.SOURCE)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> State &#123;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Peek at the 16:9 ratio keyline of its parent.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * &lt;p&gt;This can be used as a parameter for &#123;<span class="hljs-doctag">@link</span> #setPeekHeight(int)&#125;. &#123;<span class="hljs-doctag">@link</span> #getPeekHeight()&#125;</span>
+<span class="hljs-comment">     * will return this when the value is set.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> PEEK_HEIGHT_AUTO = -<span class="hljs-number">1</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * This flag will preserve the peekHeight int value on configuration change.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SAVE_PEEK_HEIGHT = <span class="hljs-number">0x1</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * This flag will preserve the fitToContents boolean value on configuration change.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SAVE_FIT_TO_CONTENTS = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">1</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * This flag will preserve the hideable boolean value on configuration change.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SAVE_HIDEABLE = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">2</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * This flag will preserve the skipCollapsed boolean value on configuration change.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SAVE_SKIP_COLLAPSED = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">3</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * This flag will preserve all aforementioned values on configuration change.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SAVE_ALL = -<span class="hljs-number">1</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * This flag will not preserve the aforementioned values set at runtime if the view is destroyed</span>
+<span class="hljs-comment">     * and recreated. The only value preserved will be the positional state, e.g. collapsed, hidden,</span>
+<span class="hljs-comment">     * expanded, etc. This is the default behavior.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SAVE_NONE = <span class="hljs-number">0</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@hide</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@RestrictTo(LIBRARY_GROUP)</span>
+    <span class="hljs-meta">@IntDef(</span>
+<span class="hljs-meta">            flag = true,</span>
+<span class="hljs-meta">            value = &#123;</span>
+<span class="hljs-meta">                    SAVE_PEEK_HEIGHT,</span>
+<span class="hljs-meta">                    SAVE_FIT_TO_CONTENTS,</span>
+<span class="hljs-meta">                    SAVE_HIDEABLE,</span>
+<span class="hljs-meta">                    SAVE_SKIP_COLLAPSED,</span>
+<span class="hljs-meta">                    SAVE_ALL,</span>
+<span class="hljs-meta">                    SAVE_NONE,</span>
+<span class="hljs-meta">            &#125;)</span>
+    <span class="hljs-meta">@Retention(RetentionPolicy.SOURCE)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> SaveFlags &#123;
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TAG = <span class="hljs-string">&quot;BottomSheetBehavior&quot;</span>;
+
+    <span class="hljs-meta">@SaveFlags</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> saveFlags = SAVE_NONE;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SIGNIFICANT_VEL_THRESHOLD = <span class="hljs-number">500</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">float</span> HIDE_THRESHOLD = <span class="hljs-number">0.5f</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">float</span> HIDE_FRICTION = <span class="hljs-number">0.1f</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CORNER_ANIMATION_DURATION = <span class="hljs-number">500</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> fitToContents = <span class="hljs-keyword">true</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> updateImportantForAccessibilityOnSiblings = <span class="hljs-keyword">false</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">float</span> maximumVelocity;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Peek height set by the user.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> peekHeight;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Whether or not to use automatic peek height.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> peekHeightAuto;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Minimum peek height permitted.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> peekHeightMin;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * True if Behavior has a non-null value for the <span class="hljs-doctag">@shapeAppearance</span> attribute</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> shapeThemingEnabled;
+
+    <span class="hljs-keyword">private</span> MaterialShapeDrawable materialShapeDrawable;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> gestureInsetBottomIgnored;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Default Shape Appearance to be used in bottomsheet</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> ShapeAppearanceModel shapeAppearanceModelDefault;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> isShapeExpanded;
+
+    <span class="hljs-keyword">private</span> SettleRunnable settleRunnable = <span class="hljs-keyword">null</span>;
+
+    <span class="hljs-meta">@Nullable</span>
+    <span class="hljs-keyword">private</span> ValueAnimator interpolatorAnimator;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DEF_STYLE_RES = R.style.Widget_Design_BottomSheet_Modal;
+
+    <span class="hljs-keyword">int</span> expandedOffset;
+
+    <span class="hljs-keyword">int</span> fitToContentsOffset;
+
+    <span class="hljs-keyword">int</span> halfExpandedOffset;
+
+    <span class="hljs-keyword">float</span> halfExpandedRatio = <span class="hljs-number">0.5f</span>;
+
+    <span class="hljs-keyword">int</span> collapsedOffset;
+
+    <span class="hljs-keyword">float</span> elevation = -<span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">boolean</span> hideable;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> skipCollapsed;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> draggable = <span class="hljs-keyword">true</span>;
+
+    <span class="hljs-meta">@State</span>
+    <span class="hljs-keyword">int</span> state = STATE_COLLAPSED;
+
+    <span class="hljs-meta">@Nullable</span>
+    ViewDragHelper viewDragHelper;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> ignoreEvents;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> lastNestedScrollDy;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> nestedScrolled;
+
+    <span class="hljs-keyword">int</span> parentWidth;
+    <span class="hljs-keyword">int</span> parentHeight;
+
+    <span class="hljs-meta">@Nullable</span>
+    WeakReference&lt;V&gt; viewRef;
+
+    <span class="hljs-meta">@Nullable</span>
+    WeakReference&lt;View&gt; nestedScrollingChildRef;
+
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ArrayList&lt;BottomSheetCallback&gt; callbacks = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+
+    <span class="hljs-meta">@Nullable</span>
+    <span class="hljs-keyword">private</span> VelocityTracker velocityTracker;
+
+    <span class="hljs-keyword">int</span> activePointerId;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> initialY;
+
+    <span class="hljs-keyword">boolean</span> touchingScrollingChild;
+
+    <span class="hljs-meta">@Nullable</span>
+    <span class="hljs-keyword">private</span> Map&lt;View, Integer&gt; importantForAccessibilityMap;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MyViewPagerBottomSheetBehavior</span><span class="hljs-params">()</span> </span>&#123;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MyViewPagerBottomSheetBehavior</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Context context, <span class="hljs-meta">@Nullable</span> AttributeSet attrs)</span> </span>&#123;
+        <span class="hljs-keyword">super</span>(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BottomSheetBehavior_Layout);
+        <span class="hljs-keyword">this</span>.shapeThemingEnabled = a.hasValue(R.styleable.BottomSheetBehavior_Layout_shapeAppearance);
+        <span class="hljs-keyword">boolean</span> hasBackgroundTint = a.hasValue(R.styleable.BottomSheetBehavior_Layout_backgroundTint);
+        <span class="hljs-keyword">if</span> (hasBackgroundTint) &#123;
+            <span class="hljs-meta">@SuppressLint(&quot;RestrictedApi&quot;)</span> ColorStateList bottomSheetColor =
+                    MaterialResources.getColorStateList(
+                            context, a, R.styleable.BottomSheetBehavior_Layout_backgroundTint);
+            createMaterialShapeDrawable(context, attrs, hasBackgroundTint, bottomSheetColor);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            createMaterialShapeDrawable(context, attrs, hasBackgroundTint);
+        &#125;
+        createShapeValueAnimator();
+
+        <span class="hljs-keyword">if</span> (VERSION.SDK_INT &gt;= VERSION_CODES.LOLLIPOP) &#123;
+            <span class="hljs-keyword">this</span>.elevation = a.getDimension(R.styleable.BottomSheetBehavior_Layout_android_elevation, -<span class="hljs-number">1</span>);
+        &#125;
+
+        TypedValue value = a.peekValue(R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight);
+        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span> &amp;&amp; value.data == PEEK_HEIGHT_AUTO) &#123;
+            setPeekHeight(value.data);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            setPeekHeight(
+                    a.getDimensionPixelSize(
+                            R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight, PEEK_HEIGHT_AUTO));
+        &#125;
+        setHideable(a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_hideable, <span class="hljs-keyword">false</span>));
+        setGestureInsetBottomIgnored(
+                a.getBoolean(R.styleable.BottomSheetBehavior_Layout_gestureInsetBottomIgnored, <span class="hljs-keyword">false</span>));
+        setFitToContents(
+                a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_fitToContents, <span class="hljs-keyword">true</span>));
+        setSkipCollapsed(
+                a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, <span class="hljs-keyword">false</span>));
+        setDraggable(a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_draggable, <span class="hljs-keyword">true</span>));
+        setSaveFlags(a.getInt(R.styleable.BottomSheetBehavior_Layout_behavior_saveFlags, SAVE_NONE));
+        setHalfExpandedRatio(
+                a.getFloat(R.styleable.BottomSheetBehavior_Layout_behavior_halfExpandedRatio, <span class="hljs-number">0.5f</span>));
+
+        value = a.peekValue(R.styleable.BottomSheetBehavior_Layout_behavior_expandedOffset);
+        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span> &amp;&amp; value.type == TypedValue.TYPE_FIRST_INT) &#123;
+            setExpandedOffset(value.data);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            setExpandedOffset(
+                    a.getDimensionPixelOffset(
+                            R.styleable.BottomSheetBehavior_Layout_behavior_expandedOffset, <span class="hljs-number">0</span>));
+        &#125;
+        a.recycle();
+        ViewConfiguration configuration = ViewConfiguration.get(context);
+        maximumVelocity = configuration.getScaledMaximumFlingVelocity();
+    &#125;
+
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Parcelable <span class="hljs-title">onSaveInstanceState</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> CoordinatorLayout parent, <span class="hljs-meta">@NonNull</span> V child)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SavedState(<span class="hljs-keyword">super</span>.onSaveInstanceState(parent, child), <span class="hljs-keyword">this</span>);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRestoreInstanceState</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout parent, <span class="hljs-meta">@NonNull</span> V child, <span class="hljs-meta">@NonNull</span> Parcelable state)</span> </span>&#123;
+        SavedState ss = (SavedState) state;
+        <span class="hljs-keyword">super</span>.onRestoreInstanceState(parent, child, ss.getSuperState());
+        <span class="hljs-comment">// Restore Optional State values designated by saveFlags</span>
+        restoreOptionalState(ss);
+        <span class="hljs-comment">// Intermediate states are restored as collapsed state</span>
+        <span class="hljs-keyword">if</span> (ss.state == STATE_DRAGGING || ss.state == STATE_SETTLING) &#123;
+            <span class="hljs-keyword">this</span>.state = STATE_COLLAPSED;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">this</span>.state = ss.state;
+        &#125;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onAttachedToLayoutParams</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> LayoutParams layoutParams)</span> </span>&#123;
+        <span class="hljs-keyword">super</span>.onAttachedToLayoutParams(layoutParams);
+        <span class="hljs-comment">// These may already be null, but just be safe, explicitly assign them. This lets us know the</span>
+        <span class="hljs-comment">// first time we layout with this behavior by checking (viewRef == null).</span>
+        viewRef = <span class="hljs-keyword">null</span>;
+        viewDragHelper = <span class="hljs-keyword">null</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onDetachedFromLayoutParams</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">super</span>.onDetachedFromLayoutParams();
+        <span class="hljs-comment">// Release references so we don&#x27;t run unnecessary codepaths while not attached to a view.</span>
+        viewRef = <span class="hljs-keyword">null</span>;
+        viewDragHelper = <span class="hljs-keyword">null</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onLayoutChild</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout parent, <span class="hljs-meta">@NonNull</span> V child, <span class="hljs-keyword">int</span> layoutDirection)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (ViewCompat.getFitsSystemWindows(parent) &amp;&amp; !ViewCompat.getFitsSystemWindows(child)) &#123;
+            child.setFitsSystemWindows(<span class="hljs-keyword">true</span>);
+        &#125;
+
+        <span class="hljs-keyword">if</span> (viewRef == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-comment">// First layout with this behavior.</span>
+            peekHeightMin =
+                    parent.getResources().getDimensionPixelSize(R.dimen.design_bottom_sheet_peek_height_min);
+            setSystemGestureInsets(parent);
+            viewRef = <span class="hljs-keyword">new</span> WeakReference&lt;&gt;(child);
+            <span class="hljs-comment">// Only set MaterialShapeDrawable as background if shapeTheming is enabled, otherwise will</span>
+            <span class="hljs-comment">// default to android:background declared in styles or layout.</span>
+            <span class="hljs-keyword">if</span> (shapeThemingEnabled &amp;&amp; materialShapeDrawable != <span class="hljs-keyword">null</span>) &#123;
+                ViewCompat.setBackground(child, materialShapeDrawable);
+            &#125;
+            <span class="hljs-comment">// Set elevation on MaterialShapeDrawable</span>
+            <span class="hljs-keyword">if</span> (materialShapeDrawable != <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-comment">// Use elevation attr if set on bottomsheet; otherwise, use elevation of child view.</span>
+                materialShapeDrawable.setElevation(
+                        elevation == -<span class="hljs-number">1</span> ? ViewCompat.getElevation(child) : elevation);
+                <span class="hljs-comment">// Update the material shape based on initial state.</span>
+                isShapeExpanded = state == STATE_EXPANDED;
+                materialShapeDrawable.setInterpolation(isShapeExpanded ? <span class="hljs-number">0f</span> : <span class="hljs-number">1f</span>);
+            &#125;
+            updateAccessibilityActions();
+            <span class="hljs-keyword">if</span> (ViewCompat.getImportantForAccessibility(child)
+                    == ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_AUTO) &#123;
+                ViewCompat.setImportantForAccessibility(child, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            &#125;
+        &#125;
+        <span class="hljs-keyword">if</span> (viewDragHelper == <span class="hljs-keyword">null</span>) &#123;
+            viewDragHelper = ViewDragHelper.create(parent, dragCallback);
+        &#125;
+
+        <span class="hljs-keyword">int</span> savedTop = child.getTop();
+        <span class="hljs-comment">// First let the parent lay it out</span>
+        parent.onLayoutChild(child, layoutDirection);
+        <span class="hljs-comment">// Offset the bottom sheet</span>
+        parentWidth = parent.getWidth();
+        parentHeight = parent.getHeight();
+        fitToContentsOffset = Math.max(<span class="hljs-number">0</span>, parentHeight - child.getHeight());
+        calculateHalfExpandedOffset();
+        calculateCollapsedOffset();
+
+        <span class="hljs-keyword">if</span> (state == STATE_EXPANDED) &#123;
+            ViewCompat.offsetTopAndBottom(child, getExpandedOffset());
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (state == STATE_HALF_EXPANDED) &#123;
+            ViewCompat.offsetTopAndBottom(child, halfExpandedOffset);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hideable &amp;&amp; state == STATE_HIDDEN) &#123;
+            ViewCompat.offsetTopAndBottom(child, parentHeight);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (state == STATE_COLLAPSED) &#123;
+            ViewCompat.offsetTopAndBottom(child, collapsedOffset);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (state == STATE_DRAGGING || state == STATE_SETTLING) &#123;
+            ViewCompat.offsetTopAndBottom(child, savedTop - child.getTop());
+        &#125;
+
+        nestedScrollingChildRef = <span class="hljs-keyword">new</span> WeakReference&lt;&gt;(findScrollingChild(child));
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onInterceptTouchEvent</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout parent, <span class="hljs-meta">@NonNull</span> V child, <span class="hljs-meta">@NonNull</span> MotionEvent event)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (!child.isShown() || !draggable) &#123;
+            ignoreEvents = <span class="hljs-keyword">true</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+        <span class="hljs-keyword">int</span> action = event.getActionMasked();
+        <span class="hljs-comment">// Record the velocity</span>
+        <span class="hljs-keyword">if</span> (action == MotionEvent.ACTION_DOWN) &#123;
+            reset();
+        &#125;
+        <span class="hljs-keyword">if</span> (velocityTracker == <span class="hljs-keyword">null</span>) &#123;
+            velocityTracker = VelocityTracker.obtain();
+        &#125;
+        velocityTracker.addMovement(event);
+        <span class="hljs-keyword">switch</span> (action) &#123;
+            <span class="hljs-keyword">case</span> MotionEvent.ACTION_UP:
+            <span class="hljs-keyword">case</span> MotionEvent.ACTION_CANCEL:
+                touchingScrollingChild = <span class="hljs-keyword">false</span>;
+                activePointerId = MotionEvent.INVALID_POINTER_ID;
+                <span class="hljs-comment">// Reset the ignore flag</span>
+                <span class="hljs-keyword">if</span> (ignoreEvents) &#123;
+                    ignoreEvents = <span class="hljs-keyword">false</span>;
+                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+                &#125;
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> MotionEvent.ACTION_DOWN:
+                <span class="hljs-keyword">int</span> initialX = (<span class="hljs-keyword">int</span>) event.getX();
+                initialY = (<span class="hljs-keyword">int</span>) event.getY();
+                <span class="hljs-comment">// Only intercept nested scrolling events here if the view not being moved by the</span>
+                <span class="hljs-comment">// ViewDragHelper.</span>
+                <span class="hljs-keyword">if</span> (state != STATE_SETTLING) &#123;
+                    View scroll = nestedScrollingChildRef != <span class="hljs-keyword">null</span> ? nestedScrollingChildRef.get() : <span class="hljs-keyword">null</span>;
+                    <span class="hljs-keyword">if</span> (scroll != <span class="hljs-keyword">null</span> &amp;&amp; parent.isPointInChildBounds(scroll, initialX, initialY)) &#123;
+                        activePointerId = event.getPointerId(event.getActionIndex());
+                        touchingScrollingChild = <span class="hljs-keyword">true</span>;
+                    &#125;
+                &#125;
+                ignoreEvents =
+                        activePointerId == MotionEvent.INVALID_POINTER_ID
+                                &amp;&amp; !parent.isPointInChildBounds(child, initialX, initialY);
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">default</span>: <span class="hljs-comment">// fall out</span>
+        &#125;
+        <span class="hljs-keyword">if</span> (!ignoreEvents
+                &amp;&amp; viewDragHelper != <span class="hljs-keyword">null</span>
+                &amp;&amp; viewDragHelper.shouldInterceptTouchEvent(event)) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        &#125;
+        <span class="hljs-comment">// We have to handle cases that the ViewDragHelper does not capture the bottom sheet because</span>
+        <span class="hljs-comment">// it is not the top most view of its parent. This is not necessary when the touch event is</span>
+        <span class="hljs-comment">// happening over the scrolling content as nested scrolling logic handles that case.</span>
+        View scroll = nestedScrollingChildRef != <span class="hljs-keyword">null</span> ? nestedScrollingChildRef.get() : <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">return</span> action == MotionEvent.ACTION_MOVE
+                &amp;&amp; scroll != <span class="hljs-keyword">null</span>
+                &amp;&amp; !ignoreEvents
+                &amp;&amp; state != STATE_DRAGGING
+                &amp;&amp; !parent.isPointInChildBounds(scroll, (<span class="hljs-keyword">int</span>) event.getX(), (<span class="hljs-keyword">int</span>) event.getY())
+                &amp;&amp; viewDragHelper != <span class="hljs-keyword">null</span>
+                &amp;&amp; Math.abs(initialY - event.getY()) &gt; viewDragHelper.getTouchSlop();
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onTouchEvent</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout parent, <span class="hljs-meta">@NonNull</span> V child, <span class="hljs-meta">@NonNull</span> MotionEvent event)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (!child.isShown()) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+        <span class="hljs-keyword">int</span> action = event.getActionMasked();
+        <span class="hljs-keyword">if</span> (state == STATE_DRAGGING &amp;&amp; action == MotionEvent.ACTION_DOWN) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (viewDragHelper != <span class="hljs-keyword">null</span>) &#123;
+            viewDragHelper.processTouchEvent(event);
+        &#125;
+        <span class="hljs-comment">// Record the velocity</span>
+        <span class="hljs-keyword">if</span> (action == MotionEvent.ACTION_DOWN) &#123;
+            reset();
+        &#125;
+        <span class="hljs-keyword">if</span> (velocityTracker == <span class="hljs-keyword">null</span>) &#123;
+            velocityTracker = VelocityTracker.obtain();
+        &#125;
+        velocityTracker.addMovement(event);
+        <span class="hljs-comment">// The ViewDragHelper tries to capture only the top-most View. We have to explicitly tell it</span>
+        <span class="hljs-comment">// to capture the bottom sheet in case it is not captured and the touch slop is passed.</span>
+        <span class="hljs-keyword">if</span> (action == MotionEvent.ACTION_MOVE &amp;&amp; !ignoreEvents) &#123;
+            <span class="hljs-keyword">if</span> (Math.abs(initialY - event.getY()) &gt; viewDragHelper.getTouchSlop()) &#123;
+                viewDragHelper.captureChildView(child, event.getPointerId(event.getActionIndex()));
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> !ignoreEvents;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onStartNestedScroll</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout coordinatorLayout,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> V child,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> View directTargetChild,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> View target,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> axes,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> type)</span> </span>&#123;
+        lastNestedScrollDy = <span class="hljs-number">0</span>;
+        nestedScrolled = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">return</span> (axes &amp; ViewCompat.SCROLL_AXIS_VERTICAL) != <span class="hljs-number">0</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onNestedPreScroll</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout coordinatorLayout,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> V child,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> View target,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> dx,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> dy,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> <span class="hljs-keyword">int</span>[] consumed,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> type)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (type == ViewCompat.TYPE_NON_TOUCH) &#123;
+            <span class="hljs-comment">// Ignore fling here. The ViewDragHelper handles it.</span>
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        View scrollingChild = nestedScrollingChildRef != <span class="hljs-keyword">null</span> ? nestedScrollingChildRef.get() : <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">if</span> (target != scrollingChild) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-keyword">int</span> currentTop = child.getTop();
+        <span class="hljs-keyword">int</span> newTop = currentTop - dy;
+        <span class="hljs-keyword">if</span> (dy &gt; <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// Upward</span>
+            <span class="hljs-keyword">if</span> (newTop &lt; getExpandedOffset()) &#123;
+                consumed[<span class="hljs-number">1</span>] = currentTop - getExpandedOffset();
+                ViewCompat.offsetTopAndBottom(child, -consumed[<span class="hljs-number">1</span>]);
+                setStateInternal(STATE_EXPANDED);
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-keyword">if</span> (!draggable) &#123;
+                    <span class="hljs-comment">// Prevent dragging</span>
+                    <span class="hljs-keyword">return</span>;
+                &#125;
+
+                consumed[<span class="hljs-number">1</span>] = dy;
+                ViewCompat.offsetTopAndBottom(child, -dy);
+                setStateInternal(STATE_DRAGGING);
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (dy &lt; <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// Downward</span>
+            <span class="hljs-keyword">if</span> (!target.canScrollVertically(-<span class="hljs-number">1</span>)) &#123;
+                <span class="hljs-keyword">if</span> (newTop &lt;= collapsedOffset || hideable) &#123;
+                    <span class="hljs-keyword">if</span> (!draggable) &#123;
+                        <span class="hljs-comment">// Prevent dragging</span>
+                        <span class="hljs-keyword">return</span>;
+                    &#125;
+
+                    consumed[<span class="hljs-number">1</span>] = dy;
+                    ViewCompat.offsetTopAndBottom(child, -dy);
+                    setStateInternal(STATE_DRAGGING);
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    consumed[<span class="hljs-number">1</span>] = currentTop - collapsedOffset;
+                    ViewCompat.offsetTopAndBottom(child, -consumed[<span class="hljs-number">1</span>]);
+                    setStateInternal(STATE_COLLAPSED);
+                &#125;
+            &#125;
+        &#125;
+        dispatchOnSlide(child.getTop());
+        lastNestedScrollDy = dy;
+        nestedScrolled = <span class="hljs-keyword">true</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onStopNestedScroll</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout coordinatorLayout,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> V child,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> View target,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> type)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (child.getTop() == getExpandedOffset()) &#123;
+            setStateInternal(STATE_EXPANDED);
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (nestedScrollingChildRef == <span class="hljs-keyword">null</span>
+                || target != nestedScrollingChildRef.get()
+                || !nestedScrolled) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-keyword">int</span> top;
+        <span class="hljs-keyword">int</span> targetState;
+        <span class="hljs-keyword">if</span> (lastNestedScrollDy &gt; <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">if</span> (fitToContents) &#123;
+                top = fitToContentsOffset;
+                targetState = STATE_EXPANDED;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-keyword">int</span> currentTop = child.getTop();
+                <span class="hljs-keyword">if</span> (currentTop &gt; halfExpandedOffset) &#123;
+                    top = halfExpandedOffset;
+                    targetState = STATE_HALF_EXPANDED;
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    top = expandedOffset;
+                    targetState = STATE_EXPANDED;
+                &#125;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hideable &amp;&amp; shouldHide(child, getYVelocity())) &#123;
+            top = parentHeight;
+            targetState = STATE_HIDDEN;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lastNestedScrollDy == <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">int</span> currentTop = child.getTop();
+            <span class="hljs-keyword">if</span> (fitToContents) &#123;
+                <span class="hljs-keyword">if</span> (Math.abs(currentTop - fitToContentsOffset) &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                    top = fitToContentsOffset;
+                    targetState = STATE_EXPANDED;
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    top = collapsedOffset;
+                    targetState = STATE_COLLAPSED;
+                &#125;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-keyword">if</span> (currentTop &lt; halfExpandedOffset) &#123;
+                    <span class="hljs-keyword">if</span> (currentTop &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                        top = expandedOffset;
+                        targetState = STATE_EXPANDED;
+                    &#125; <span class="hljs-keyword">else</span> &#123;
+                        top = halfExpandedOffset;
+                        targetState = STATE_HALF_EXPANDED;
+                    &#125;
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    <span class="hljs-keyword">if</span> (Math.abs(currentTop - halfExpandedOffset) &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                        top = halfExpandedOffset;
+                        targetState = STATE_HALF_EXPANDED;
+                    &#125; <span class="hljs-keyword">else</span> &#123;
+                        top = collapsedOffset;
+                        targetState = STATE_COLLAPSED;
+                    &#125;
+                &#125;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">if</span> (fitToContents) &#123;
+                top = collapsedOffset;
+                targetState = STATE_COLLAPSED;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-comment">// Settle to nearest height.</span>
+                <span class="hljs-keyword">int</span> currentTop = child.getTop();
+                <span class="hljs-keyword">if</span> (Math.abs(currentTop - halfExpandedOffset) &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                    top = halfExpandedOffset;
+                    targetState = STATE_HALF_EXPANDED;
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    top = collapsedOffset;
+                    targetState = STATE_COLLAPSED;
+                &#125;
+            &#125;
+        &#125;
+        startSettlingAnimation(child, targetState, top, <span class="hljs-keyword">false</span>);
+        nestedScrolled = <span class="hljs-keyword">false</span>;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onNestedScroll</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout coordinatorLayout,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> V child,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> View target,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> dxConsumed,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> dyConsumed,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> dxUnconsumed,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> dyUnconsumed,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">int</span> type,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> <span class="hljs-keyword">int</span>[] consumed)</span> </span>&#123;
+        <span class="hljs-comment">// Overridden to prevent the default consumption of the entire scroll distance.</span>
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">onNestedPreFling</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> CoordinatorLayout coordinatorLayout,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> V child,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> View target,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">float</span> velocityX,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">float</span> velocityY)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (nestedScrollingChildRef != <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span> target == nestedScrollingChildRef.get()
+                    &amp;&amp; (state != STATE_EXPANDED
+                    || <span class="hljs-keyword">super</span>.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY));
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> whether the height of the expanded sheet is determined by the height of its contents,</span>
+<span class="hljs-comment">     * or if it is expanded in two stages (half the height of the parent container, full height of</span>
+<span class="hljs-comment">     * parent container).</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isFitToContents</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> fitToContents;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets whether the height of the expanded sheet is determined by the height of its contents, or</span>
+<span class="hljs-comment">     * if it is expanded in two stages (half the height of the parent container, full height of parent</span>
+<span class="hljs-comment">     * container). Default value is true.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> fitToContents whether or not to fit the expanded sheet to its contents.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setFitToContents</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> fitToContents)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.fitToContents == fitToContents) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-keyword">this</span>.fitToContents = fitToContents;
+
+        <span class="hljs-comment">// If sheet is already laid out, recalculate the collapsed offset based on new setting.</span>
+        <span class="hljs-comment">// Otherwise, let onLayoutChild handle this later.</span>
+        <span class="hljs-keyword">if</span> (viewRef != <span class="hljs-keyword">null</span>) &#123;
+            calculateCollapsedOffset();
+        &#125;
+        <span class="hljs-comment">// Fix incorrect expanded settings depending on whether or not we are fitting sheet to contents.</span>
+        setStateInternal((<span class="hljs-keyword">this</span>.fitToContents &amp;&amp; state == STATE_HALF_EXPANDED) ? STATE_EXPANDED : state);
+
+        updateAccessibilityActions();
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets the height of the bottom sheet when it is collapsed.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> peekHeight The height of the collapsed bottom sheet in pixels, or &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">     *                   #PEEK_HEIGHT_AUTO&#125; to configure the sheet to peek automatically at 16:9 ratio keyline.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setPeekHeight</span><span class="hljs-params">(<span class="hljs-keyword">int</span> peekHeight)</span> </span>&#123;
+        setPeekHeight(peekHeight, <span class="hljs-keyword">false</span>);
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets the height of the bottom sheet when it is collapsed while optionally animating between the</span>
+<span class="hljs-comment">     * old height and the new height.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> peekHeight The height of the collapsed bottom sheet in pixels, or &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">     *                   #PEEK_HEIGHT_AUTO&#125; to configure the sheet to peek automatically at 16:9 ratio keyline.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> animate    Whether to animate between the old height and the new height.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setPeekHeight</span><span class="hljs-params">(<span class="hljs-keyword">int</span> peekHeight, <span class="hljs-keyword">boolean</span> animate)</span> </span>&#123;
+        <span class="hljs-keyword">boolean</span> layout = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">if</span> (peekHeight == PEEK_HEIGHT_AUTO) &#123;
+            <span class="hljs-keyword">if</span> (!peekHeightAuto) &#123;
+                peekHeightAuto = <span class="hljs-keyword">true</span>;
+                layout = <span class="hljs-keyword">true</span>;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (peekHeightAuto || <span class="hljs-keyword">this</span>.peekHeight != peekHeight) &#123;
+            peekHeightAuto = <span class="hljs-keyword">false</span>;
+            <span class="hljs-keyword">this</span>.peekHeight = Math.max(<span class="hljs-number">0</span>, peekHeight);
+            layout = <span class="hljs-keyword">true</span>;
+        &#125;
+        <span class="hljs-comment">// If sheet is already laid out, recalculate the collapsed offset based on new setting.</span>
+        <span class="hljs-comment">// Otherwise, let onLayoutChild handle this later.</span>
+        <span class="hljs-keyword">if</span> (layout &amp;&amp; viewRef != <span class="hljs-keyword">null</span>) &#123;
+            calculateCollapsedOffset();
+            <span class="hljs-keyword">if</span> (state == STATE_COLLAPSED) &#123;
+                V view = viewRef.get();
+                <span class="hljs-keyword">if</span> (view != <span class="hljs-keyword">null</span>) &#123;
+                    <span class="hljs-keyword">if</span> (animate) &#123;
+                        settleToStatePendingLayout(state);
+                    &#125; <span class="hljs-keyword">else</span> &#123;
+                        view.requestLayout();
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Gets the height of the bottom sheet when it is collapsed.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> The height of the collapsed bottom sheet in pixels, or &#123;<span class="hljs-doctag">@link</span> #PEEK_HEIGHT_AUTO&#125; if the</span>
+<span class="hljs-comment">     * sheet is configured to peek automatically at 16:9 ratio keyline</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getPeekHeight</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> peekHeightAuto ? PEEK_HEIGHT_AUTO : peekHeight;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Determines the height of the BottomSheet in the &#123;<span class="hljs-doctag">@link</span> #STATE_HALF_EXPANDED&#125; state. The</span>
+<span class="hljs-comment">     * material guidelines recommended a value of 0.5, which results in the sheet filling half of the</span>
+<span class="hljs-comment">     * parent. The height of the BottomSheet will be smaller as this ratio is decreased and taller as</span>
+<span class="hljs-comment">     * it is increased. The default value is 0.5.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> ratio a float between 0 and 1, representing the &#123;<span class="hljs-doctag">@link</span> #STATE_HALF_EXPANDED&#125; ratio.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_halfExpandedRatio</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setHalfExpandedRatio</span><span class="hljs-params">(<span class="hljs-meta">@FloatRange(from = 0.0f, to = 1.0f)</span> <span class="hljs-keyword">float</span> ratio)</span> </span>&#123;
+
+        <span class="hljs-keyword">if</span> ((ratio &lt;= <span class="hljs-number">0</span>) || (ratio &gt;= <span class="hljs-number">1</span>)) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;ratio must be a float value between 0 and 1&quot;</span>);
+        &#125;
+        <span class="hljs-keyword">this</span>.halfExpandedRatio = ratio;
+        <span class="hljs-comment">// If sheet is already laid out, recalculate the half expanded offset based on new setting.</span>
+        <span class="hljs-comment">// Otherwise, let onLayoutChild handle this later.</span>
+        <span class="hljs-keyword">if</span> (viewRef != <span class="hljs-keyword">null</span>) &#123;
+            calculateHalfExpandedOffset();
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Gets the ratio for the height of the BottomSheet in the &#123;<span class="hljs-doctag">@link</span> #STATE_HALF_EXPANDED&#125; state.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_halfExpandedRatio</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@FloatRange(from = 0.0f, to = 1.0f)</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">float</span> <span class="hljs-title">getHalfExpandedRatio</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> halfExpandedRatio;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Determines the top offset of the BottomSheet in the &#123;<span class="hljs-doctag">@link</span> #STATE_EXPANDED&#125; state when</span>
+<span class="hljs-comment">     * fitsToContent is false. The default value is 0, which results in the sheet matching the</span>
+<span class="hljs-comment">     * parent&#x27;s top.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> offset an integer value greater than equal to 0, representing the &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">     *               #STATE_EXPANDED&#125; offset. Value must not exceed the offset in the half expanded state.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_expandedOffset</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setExpandedOffset</span><span class="hljs-params">(<span class="hljs-keyword">int</span> offset)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;offset must be greater than or equal to 0&quot;</span>);
+        &#125;
+        <span class="hljs-keyword">this</span>.expandedOffset = offset;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Returns the current expanded offset. If &#123;<span class="hljs-doctag">@code</span> fitToContents&#125; is true, it will automatically</span>
+<span class="hljs-comment">     * pick the offset depending on the height of the content.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_expandedOffset</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getExpandedOffset</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> fitToContents ? fitToContentsOffset : expandedOffset;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets whether this bottom sheet can hide when it is swiped down.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> hideable &#123;<span class="hljs-doctag">@code</span> true&#125; to make this bottom sheet hideable.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_hideable</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setHideable</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> hideable)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hideable != hideable) &#123;
+            <span class="hljs-keyword">this</span>.hideable = hideable;
+            <span class="hljs-keyword">if</span> (!hideable &amp;&amp; state == STATE_HIDDEN) &#123;
+                <span class="hljs-comment">// Lift up to collapsed state</span>
+                setState(STATE_COLLAPSED);
+            &#125;
+            updateAccessibilityActions();
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Gets whether this bottom sheet can hide when it is swiped down.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@code</span> true&#125; if this bottom sheet can hide.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_hideable</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isHideable</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> hideable;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets whether this bottom sheet should skip the collapsed state when it is being hidden after it</span>
+<span class="hljs-comment">     * is expanded once. Setting this to true has no effect unless the sheet is hideable.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> skipCollapsed True if the bottom sheet should skip the collapsed state.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setSkipCollapsed</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> skipCollapsed)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.skipCollapsed = skipCollapsed;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets whether this bottom sheet should skip the collapsed state when it is being hidden after it</span>
+<span class="hljs-comment">     * is expanded once.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> Whether the bottom sheet should skip the collapsed state.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref</span>
+<span class="hljs-comment">     * com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">getSkipCollapsed</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> skipCollapsed;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets whether this bottom sheet is can be collapsed/expanded by dragging. Note: When disabling</span>
+<span class="hljs-comment">     * dragging, an app will require to implement a custom way to expand/collapse the bottom sheet</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> draggable &#123;<span class="hljs-doctag">@code</span> false&#125; to prevent dragging the sheet to collapse and expand</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_draggable</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setDraggable</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> draggable)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.draggable = draggable;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isDraggable</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> draggable;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets save flags to be preserved in bottomsheet on configuration change.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> flags bitwise int of &#123;<span class="hljs-doctag">@link</span> #SAVE_PEEK_HEIGHT&#125;, &#123;<span class="hljs-doctag">@link</span> #SAVE_FIT_TO_CONTENTS&#125;, &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">     *              #SAVE_HIDEABLE&#125;, &#123;<span class="hljs-doctag">@link</span> #SAVE_SKIP_COLLAPSED&#125;, &#123;<span class="hljs-doctag">@link</span> #SAVE_ALL&#125; and &#123;<span class="hljs-doctag">@link</span> #SAVE_NONE&#125;.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_saveFlags</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@see</span> #getSaveFlags()</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setSaveFlags</span><span class="hljs-params">(<span class="hljs-meta">@SaveFlags</span> <span class="hljs-keyword">int</span> flags)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.saveFlags = flags;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Returns the save flags.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@attr</span> ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_saveFlags</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@see</span> #setSaveFlags(int)</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@SaveFlags</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getSaveFlags</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.saveFlags;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets a callback to be notified of bottom sheet events.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> callback The callback to notify when bottom sheet events occur.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@deprecated</span> use &#123;<span class="hljs-doctag">@link</span> #addBottomSheetCallback(BottomSheetCallback)&#125; and &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">     * #removeBottomSheetCallback(BottomSheetCallback)&#125; instead</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Deprecated</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setBottomSheetCallback</span><span class="hljs-params">(BottomSheetCallback callback)</span> </span>&#123;
+        Log.w(
+                TAG,
+                <span class="hljs-string">&quot;BottomSheetBehavior now supports multiple callbacks. `setBottomSheetCallback()` removes&quot;</span>
+                        + <span class="hljs-string">&quot; all existing callbacks, including ones set internally by library authors, which&quot;</span>
+                        + <span class="hljs-string">&quot; may result in unintended behavior. This may change in the future. Please use&quot;</span>
+                        + <span class="hljs-string">&quot; `addBottomSheetCallback()` and `removeBottomSheetCallback()` instead to set your&quot;</span>
+                        + <span class="hljs-string">&quot; own callbacks.&quot;</span>);
+        callbacks.clear();
+        <span class="hljs-keyword">if</span> (callback != <span class="hljs-keyword">null</span>) &#123;
+            callbacks.add(callback);
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Adds a callback to be notified of bottom sheet events.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> callback The callback to notify when bottom sheet events occur.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addBottomSheetCallback</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> BottomSheetCallback callback)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (!callbacks.contains(callback)) &#123;
+            callbacks.add(callback);
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Removes a previously added callback.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> callback The callback to remove.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeBottomSheetCallback</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> BottomSheetCallback callback)</span> </span>&#123;
+        callbacks.remove(callback);
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets the state of the bottom sheet. The bottom sheet will transition to that state with</span>
+<span class="hljs-comment">     * animation.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> state One of &#123;<span class="hljs-doctag">@link</span> #STATE_COLLAPSED&#125;, &#123;<span class="hljs-doctag">@link</span> #STATE_EXPANDED&#125;, &#123;<span class="hljs-doctag">@link</span> #STATE_HIDDEN&#125;,</span>
+<span class="hljs-comment">     *              or &#123;<span class="hljs-doctag">@link</span> #STATE_HALF_EXPANDED&#125;.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setState</span><span class="hljs-params">(<span class="hljs-meta">@State</span> <span class="hljs-keyword">int</span> state)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (state == <span class="hljs-keyword">this</span>.state) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (viewRef == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-comment">// The view is not laid out yet; modify mState and let onLayoutChild handle it later</span>
+            <span class="hljs-keyword">if</span> (state == STATE_COLLAPSED
+                    || state == STATE_EXPANDED
+                    || state == STATE_HALF_EXPANDED
+                    || (hideable &amp;&amp; state == STATE_HIDDEN)) &#123;
+                <span class="hljs-keyword">this</span>.state = state;
+            &#125;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        settleToStatePendingLayout(state);
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets whether this bottom sheet should adjust it&#x27;s position based on the system gesture area on</span>
+<span class="hljs-comment">     * Android Q and above.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * &lt;p&gt;Note: the bottom sheet will only adjust it&#x27;s position if it would be unable to be scrolled</span>
+<span class="hljs-comment">     * upwards because the peekHeight is less than the gesture inset margins,(because that would cause</span>
+<span class="hljs-comment">     * a gesture conflict), gesture navigation is enabled, and this &#123;<span class="hljs-doctag">@code</span> ignoreGestureInsetBottom&#125;</span>
+<span class="hljs-comment">     * flag is false.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setGestureInsetBottomIgnored</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> gestureInsetBottomIgnored)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.gestureInsetBottomIgnored = gestureInsetBottomIgnored;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Returns whether this bottom sheet should adjust it&#x27;s position based on the system gesture area.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isGestureInsetBottomIgnored</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> gestureInsetBottomIgnored;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">settleToStatePendingLayout</span><span class="hljs-params">(<span class="hljs-meta">@State</span> <span class="hljs-keyword">int</span> state)</span> </span>&#123;
+        <span class="hljs-keyword">final</span> V child = viewRef.get();
+        <span class="hljs-keyword">if</span> (child == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-comment">// Start the animation; wait until a pending layout if there is one.</span>
+        ViewParent parent = child.getParent();
+        <span class="hljs-keyword">if</span> (parent != <span class="hljs-keyword">null</span> &amp;&amp; parent.isLayoutRequested() &amp;&amp; ViewCompat.isAttachedToWindow(child)) &#123;
+            <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> finalState = state;
+            child.post(
+                    <span class="hljs-keyword">new</span> Runnable() &#123;
+                        <span class="hljs-meta">@Override</span>
+                        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+                            settleToState(child, finalState);
+                        &#125;
+                    &#125;);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            settleToState(child, state);
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Gets the current state of the bottom sheet.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> One of &#123;<span class="hljs-doctag">@link</span> #STATE_EXPANDED&#125;, &#123;<span class="hljs-doctag">@link</span> #STATE_HALF_EXPANDED&#125;, &#123;<span class="hljs-doctag">@link</span> #STATE_COLLAPSED&#125;,</span>
+<span class="hljs-comment">     * &#123;<span class="hljs-doctag">@link</span> #STATE_DRAGGING&#125;, &#123;<span class="hljs-doctag">@link</span> #STATE_SETTLING&#125;, or &#123;<span class="hljs-doctag">@link</span> #STATE_HALF_EXPANDED&#125;.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@State</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getState</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> state;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setStateInternal</span><span class="hljs-params">(<span class="hljs-meta">@State</span> <span class="hljs-keyword">int</span> state)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state == state) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-keyword">this</span>.state = state;
+
+        <span class="hljs-keyword">if</span> (viewRef == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        View bottomSheet = viewRef.get();
+        <span class="hljs-keyword">if</span> (bottomSheet == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        <span class="hljs-keyword">if</span> (state == STATE_EXPANDED) &#123;
+            updateImportantForAccessibility(<span class="hljs-keyword">true</span>);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (state == STATE_HALF_EXPANDED || state == STATE_HIDDEN || state == STATE_COLLAPSED) &#123;
+            updateImportantForAccessibility(<span class="hljs-keyword">false</span>);
+        &#125;
+
+        updateDrawableForTargetState(state);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; callbacks.size(); i++) &#123;
+            callbacks.get(i).onStateChanged(bottomSheet, state);
+        &#125;
+        updateAccessibilityActions();
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">updateDrawableForTargetState</span><span class="hljs-params">(<span class="hljs-meta">@State</span> <span class="hljs-keyword">int</span> state)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (state == STATE_SETTLING) &#123;
+            <span class="hljs-comment">// Special case: we want to know which state we&#x27;re settling to, so wait for another call.</span>
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        <span class="hljs-keyword">boolean</span> expand = state == STATE_EXPANDED;
+        <span class="hljs-keyword">if</span> (isShapeExpanded != expand) &#123;
+            isShapeExpanded = expand;
+            <span class="hljs-keyword">if</span> (materialShapeDrawable != <span class="hljs-keyword">null</span> &amp;&amp; interpolatorAnimator != <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-keyword">if</span> (interpolatorAnimator.isRunning()) &#123;
+                    interpolatorAnimator.reverse();
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    <span class="hljs-keyword">float</span> to = expand ? <span class="hljs-number">0f</span> : <span class="hljs-number">1f</span>;
+                    <span class="hljs-keyword">float</span> from = <span class="hljs-number">1f</span> - to;
+                    interpolatorAnimator.setFloatValues(from, to);
+                    interpolatorAnimator.start();
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">calculatePeekHeight</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (peekHeightAuto) &#123;
+            <span class="hljs-keyword">return</span> Math.max(peekHeightMin, parentHeight - parentWidth * <span class="hljs-number">9</span> / <span class="hljs-number">16</span>);
+        &#125;
+        <span class="hljs-keyword">return</span> peekHeight;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">calculateCollapsedOffset</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">int</span> peek = calculatePeekHeight();
+
+        <span class="hljs-keyword">if</span> (fitToContents) &#123;
+            collapsedOffset = Math.max(parentHeight - peek, fitToContentsOffset);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            collapsedOffset = parentHeight - peek;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">calculateHalfExpandedOffset</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.halfExpandedOffset = (<span class="hljs-keyword">int</span>) (parentHeight * (<span class="hljs-number">1</span> - halfExpandedRatio));
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">reset</span><span class="hljs-params">()</span> </span>&#123;
+        activePointerId = ViewDragHelper.INVALID_POINTER;
+        <span class="hljs-keyword">if</span> (velocityTracker != <span class="hljs-keyword">null</span>) &#123;
+            velocityTracker.recycle();
+            velocityTracker = <span class="hljs-keyword">null</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">restoreOptionalState</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> SavedState ss)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.saveFlags == SAVE_NONE) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.saveFlags == SAVE_ALL || (<span class="hljs-keyword">this</span>.saveFlags &amp; SAVE_PEEK_HEIGHT) == SAVE_PEEK_HEIGHT) &#123;
+            <span class="hljs-keyword">this</span>.peekHeight = ss.peekHeight;
+        &#125;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.saveFlags == SAVE_ALL
+                || (<span class="hljs-keyword">this</span>.saveFlags &amp; SAVE_FIT_TO_CONTENTS) == SAVE_FIT_TO_CONTENTS) &#123;
+            <span class="hljs-keyword">this</span>.fitToContents = ss.fitToContents;
+        &#125;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.saveFlags == SAVE_ALL || (<span class="hljs-keyword">this</span>.saveFlags &amp; SAVE_HIDEABLE) == SAVE_HIDEABLE) &#123;
+            <span class="hljs-keyword">this</span>.hideable = ss.hideable;
+        &#125;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.saveFlags == SAVE_ALL
+                || (<span class="hljs-keyword">this</span>.saveFlags &amp; SAVE_SKIP_COLLAPSED) == SAVE_SKIP_COLLAPSED) &#123;
+            <span class="hljs-keyword">this</span>.skipCollapsed = ss.skipCollapsed;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">shouldHide</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View child, <span class="hljs-keyword">float</span> yvel)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (skipCollapsed) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (child.getTop() &lt; collapsedOffset) &#123;
+            <span class="hljs-comment">// It should not hide, but collapse.</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+        <span class="hljs-keyword">int</span> peek = calculatePeekHeight();
+        <span class="hljs-keyword">final</span> <span class="hljs-keyword">float</span> newTop = child.getTop() + yvel * HIDE_FRICTION;
+        <span class="hljs-keyword">return</span> Math.abs(newTop - collapsedOffset) / (<span class="hljs-keyword">float</span>) peek &gt; HIDE_THRESHOLD;
+    &#125;
+
+    <span class="hljs-comment">//针对viewpager联动</span>
+    <span class="hljs-keyword">boolean</span> isFirstFind = <span class="hljs-keyword">true</span>; <span class="hljs-comment">//第一次寻找联动View，为viewPager添加滑动监听</span>
+    <span class="hljs-keyword">private</span> HashMap&lt;Integer, Boolean&gt; isScrollViewOnTopMap = <span class="hljs-keyword">new</span> HashMap&lt;&gt;(); <span class="hljs-comment">//关联页数与能否滑动flag的Map</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> currentPagePosition = <span class="hljs-number">0</span>; <span class="hljs-comment">//当前ViewPager的页数</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setCurrentScrollViewOnTop</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> scrollViewOnTop)</span> </span>&#123;
+        isScrollViewOnTopMap.put(currentPagePosition, scrollViewOnTop);
+        Log.d(<span class="hljs-string">&quot;~~~~~~~~~&quot;</span>,isScrollViewOnTopMap.toString());
+        notifyScrollView();
+    &#125;
+
+    <span class="hljs-keyword">private</span> View globalView;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">notifyScrollView</span><span class="hljs-params">()</span> </span>&#123;
+        nestedScrollingChildRef = <span class="hljs-keyword">new</span> WeakReference&lt;&gt;(findScrollingChild(globalView));
+    &#125;
+
+    <span class="hljs-meta">@Nullable</span>
+    <span class="hljs-meta">@VisibleForTesting</span>
+    <span class="hljs-function">View <span class="hljs-title">findScrollingChild</span><span class="hljs-params">(View view)</span> </span>&#123;
+        <span class="hljs-keyword">if</span>(view==<span class="hljs-keyword">null</span>)&#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+        &#125;
+        globalView = view;
+        <span class="hljs-keyword">boolean</span> b = isScrollViewOnTopMap.getOrDefault(currentPagePosition,<span class="hljs-keyword">false</span> );
+        <span class="hljs-keyword">if</span> (b) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+        &#125;
+
+        <span class="hljs-keyword">if</span> (ViewCompat.isNestedScrollingEnabled(view)) &#123;
+            <span class="hljs-keyword">return</span> view;
+        &#125;
+        <span class="hljs-keyword">if</span> (view <span class="hljs-keyword">instanceof</span> ViewPager) &#123;
+            ViewPager viewPager = (ViewPager) view;
+            <span class="hljs-keyword">if</span> (isFirstFind) &#123;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Objects.requireNonNull(viewPager.getAdapter()).getCount(); i++) &#123;
+                    isScrollViewOnTopMap.put(i,<span class="hljs-keyword">true</span>);
+                &#125;
+                viewPager.addOnPageChangeListener(<span class="hljs-keyword">new</span> ViewPager.OnPageChangeListener() &#123;
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onPageScrolled</span><span class="hljs-params">(<span class="hljs-keyword">int</span> position, <span class="hljs-keyword">float</span> positionOffset, <span class="hljs-keyword">int</span> positionOffsetPixels)</span> </span>&#123;
+                        currentPagePosition = position;
+                    &#125;
+
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onPageSelected</span><span class="hljs-params">(<span class="hljs-keyword">int</span> position)</span> </span>&#123;
+
+                    &#125;
+
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onPageScrollStateChanged</span><span class="hljs-params">(<span class="hljs-keyword">int</span> state)</span> </span>&#123;
+
+                    &#125;
+                &#125;);
+                isFirstFind = <span class="hljs-keyword">false</span>;
+            &#125;
+            View currentViewPagerChild = ViewPagerUtils.getCurrentView(viewPager);
+            View scrollingChild = findScrollingChild(currentViewPagerChild);
+            <span class="hljs-keyword">if</span> (scrollingChild != <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-keyword">return</span> scrollingChild;
+            &#125;
+            <span class="hljs-keyword">return</span> currentViewPagerChild;
+        &#125;
+
+        <span class="hljs-keyword">if</span> (view <span class="hljs-keyword">instanceof</span> ViewGroup) &#123;
+            ViewGroup group = (ViewGroup) view;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, count = group.getChildCount(); i &lt; count; i++) &#123;
+                View scrollingChild = findScrollingChild(group.getChildAt(i));
+                <span class="hljs-keyword">if</span> (scrollingChild != <span class="hljs-keyword">null</span>) &#123;
+                    <span class="hljs-keyword">return</span> scrollingChild;
+                &#125;
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">createMaterialShapeDrawable</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> Context context, AttributeSet attrs, <span class="hljs-keyword">boolean</span> hasBackgroundTint)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.createMaterialShapeDrawable(context, attrs, hasBackgroundTint, <span class="hljs-keyword">null</span>);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">createMaterialShapeDrawable</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@NonNull</span> Context context,</span></span>
+<span class="hljs-function"><span class="hljs-params">            AttributeSet attrs,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">boolean</span> hasBackgroundTint,</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-meta">@Nullable</span> ColorStateList bottomSheetColor)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.shapeThemingEnabled) &#123;
+            <span class="hljs-keyword">this</span>.shapeAppearanceModelDefault =
+                    ShapeAppearanceModel.builder(context, attrs, R.attr.bottomSheetStyle, DEF_STYLE_RES)
+                            .build();
+
+            <span class="hljs-keyword">this</span>.materialShapeDrawable = <span class="hljs-keyword">new</span> MaterialShapeDrawable(shapeAppearanceModelDefault);
+            <span class="hljs-keyword">this</span>.materialShapeDrawable.initializeElevationOverlay(context);
+
+            <span class="hljs-keyword">if</span> (hasBackgroundTint &amp;&amp; bottomSheetColor != <span class="hljs-keyword">null</span>) &#123;
+                materialShapeDrawable.setFillColor(bottomSheetColor);
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-comment">// If the tint isn&#x27;t set, use the theme default background color.</span>
+                TypedValue defaultColor = <span class="hljs-keyword">new</span> TypedValue();
+                context.getTheme().resolveAttribute(android.R.attr.colorBackground, defaultColor, <span class="hljs-keyword">true</span>);
+                materialShapeDrawable.setTint(defaultColor.data);
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">createShapeValueAnimator</span><span class="hljs-params">()</span> </span>&#123;
+        interpolatorAnimator = ValueAnimator.ofFloat(<span class="hljs-number">0f</span>, <span class="hljs-number">1f</span>);
+        interpolatorAnimator.setDuration(CORNER_ANIMATION_DURATION);
+        interpolatorAnimator.addUpdateListener(
+                <span class="hljs-keyword">new</span> AnimatorUpdateListener() &#123;
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onAnimationUpdate</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> ValueAnimator animation)</span> </span>&#123;
+                        <span class="hljs-keyword">float</span> value = (<span class="hljs-keyword">float</span>) animation.getAnimatedValue();
+                        <span class="hljs-keyword">if</span> (materialShapeDrawable != <span class="hljs-keyword">null</span>) &#123;
+                            materialShapeDrawable.setInterpolation(value);
+                        &#125;
+                    &#125;
+                &#125;);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setSystemGestureInsets</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> CoordinatorLayout parent)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (VERSION.SDK_INT &gt;= VERSION_CODES.Q &amp;&amp; !isGestureInsetBottomIgnored()) &#123;
+            WindowInsets windowInsets = parent.getRootWindowInsets();
+            <span class="hljs-keyword">if</span> (windowInsets != <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-keyword">int</span> systemMandatoryInsetsBottom = windowInsets.getSystemGestureInsets().bottom;
+                peekHeight += systemMandatoryInsetsBottom;
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">float</span> <span class="hljs-title">getYVelocity</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (velocityTracker == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        &#125;
+        velocityTracker.computeCurrentVelocity(<span class="hljs-number">1000</span>, maximumVelocity);
+        <span class="hljs-keyword">return</span> velocityTracker.getYVelocity(activePointerId);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">settleToState</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View child, <span class="hljs-keyword">int</span> state)</span> </span>&#123;
+        <span class="hljs-keyword">int</span> top;
+        <span class="hljs-keyword">if</span> (state == STATE_COLLAPSED) &#123;
+            top = collapsedOffset;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (state == STATE_HALF_EXPANDED) &#123;
+            top = halfExpandedOffset;
+            <span class="hljs-keyword">if</span> (fitToContents &amp;&amp; top &lt;= fitToContentsOffset) &#123;
+                <span class="hljs-comment">// Skip to the expanded state if we would scroll past the height of the contents.</span>
+                state = STATE_EXPANDED;
+                top = fitToContentsOffset;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (state == STATE_EXPANDED) &#123;
+            top = getExpandedOffset();
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hideable &amp;&amp; state == STATE_HIDDEN) &#123;
+            top = parentHeight;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;Illegal state argument: &quot;</span> + state);
+        &#125;
+        startSettlingAnimation(child, state, top, <span class="hljs-keyword">false</span>);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">startSettlingAnimation</span><span class="hljs-params">(View child, <span class="hljs-keyword">int</span> state, <span class="hljs-keyword">int</span> top, <span class="hljs-keyword">boolean</span> settleFromViewDragHelper)</span> </span>&#123;
+        <span class="hljs-keyword">boolean</span> startedSettling =
+                settleFromViewDragHelper
+                        ? viewDragHelper.settleCapturedViewAt(child.getLeft(), top)
+                        : viewDragHelper.smoothSlideViewTo(child, child.getLeft(), top);
+        <span class="hljs-keyword">if</span> (startedSettling) &#123;
+            setStateInternal(STATE_SETTLING);
+            <span class="hljs-comment">// STATE_SETTLING won&#x27;t animate the material shape, so do that here with the target state.</span>
+            updateDrawableForTargetState(state);
+            <span class="hljs-keyword">if</span> (settleRunnable == <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-comment">// If the singleton SettleRunnable instance has not been instantiated, create it.</span>
+                settleRunnable = <span class="hljs-keyword">new</span> SettleRunnable(child, state);
+            &#125;
+            <span class="hljs-comment">// If the SettleRunnable has not been posted, post it with the correct state.</span>
+            <span class="hljs-keyword">if</span> (settleRunnable.isPosted == <span class="hljs-keyword">false</span>) &#123;
+                settleRunnable.targetState = state;
+                ViewCompat.postOnAnimation(child, settleRunnable);
+                settleRunnable.isPosted = <span class="hljs-keyword">true</span>;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-comment">// Otherwise, if it has been posted, just update the target state.</span>
+                settleRunnable.targetState = state;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            setStateInternal(state);
+        &#125;
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ViewDragHelper.Callback dragCallback =
+            <span class="hljs-keyword">new</span> ViewDragHelper.Callback() &#123;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryCaptureView</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View child, <span class="hljs-keyword">int</span> pointerId)</span> </span>&#123;
+                    <span class="hljs-keyword">if</span> (state == STATE_DRAGGING) &#123;
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+                    &#125;
+                    <span class="hljs-keyword">if</span> (touchingScrollingChild) &#123;
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+                    &#125;
+                    <span class="hljs-keyword">if</span> (state == STATE_EXPANDED &amp;&amp; activePointerId == pointerId) &#123;
+                        View scroll = nestedScrollingChildRef != <span class="hljs-keyword">null</span> ? nestedScrollingChildRef.get() : <span class="hljs-keyword">null</span>;
+                        <span class="hljs-keyword">if</span> (scroll != <span class="hljs-keyword">null</span> &amp;&amp; scroll.canScrollVertically(-<span class="hljs-number">1</span>)) &#123;
+                            <span class="hljs-comment">// Let the content scroll up</span>
+                            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+                        &#125;
+                    &#125;
+                    <span class="hljs-keyword">return</span> viewRef != <span class="hljs-keyword">null</span> &amp;&amp; viewRef.get() == child;
+                &#125;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onViewPositionChanged</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">                        <span class="hljs-meta">@NonNull</span> View changedView, <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> top, <span class="hljs-keyword">int</span> dx, <span class="hljs-keyword">int</span> dy)</span> </span>&#123;
+                    dispatchOnSlide(top);
+                &#125;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onViewDragStateChanged</span><span class="hljs-params">(<span class="hljs-keyword">int</span> state)</span> </span>&#123;
+                    <span class="hljs-keyword">if</span> (state == ViewDragHelper.STATE_DRAGGING &amp;&amp; draggable) &#123;
+                        setStateInternal(STATE_DRAGGING);
+                    &#125;
+                &#125;
+
+                <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">releasedLow</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View child)</span> </span>&#123;
+                    <span class="hljs-comment">// Needs to be at least half way to the bottom.</span>
+                    <span class="hljs-keyword">return</span> child.getTop() &gt; (parentHeight + getExpandedOffset()) / <span class="hljs-number">2</span>;
+                &#125;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onViewReleased</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View releasedChild, <span class="hljs-keyword">float</span> xvel, <span class="hljs-keyword">float</span> yvel)</span> </span>&#123;
+                    <span class="hljs-keyword">int</span> top;
+                    <span class="hljs-meta">@State</span> <span class="hljs-keyword">int</span> targetState;
+                    <span class="hljs-keyword">if</span> (yvel &lt; <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// Moving up</span>
+                        <span class="hljs-keyword">if</span> (fitToContents) &#123;
+                            top = fitToContentsOffset;
+                            targetState = STATE_EXPANDED;
+                        &#125; <span class="hljs-keyword">else</span> &#123;
+                            <span class="hljs-keyword">int</span> currentTop = releasedChild.getTop();
+                            <span class="hljs-keyword">if</span> (currentTop &gt; halfExpandedOffset) &#123;
+                                top = halfExpandedOffset;
+                                targetState = STATE_HALF_EXPANDED;
+                            &#125; <span class="hljs-keyword">else</span> &#123;
+                                top = expandedOffset;
+                                targetState = STATE_EXPANDED;
+                            &#125;
+                        &#125;
+                    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hideable &amp;&amp; shouldHide(releasedChild, yvel)) &#123;
+                        <span class="hljs-comment">// Hide if the view was either released low or it was a significant vertical swipe</span>
+                        <span class="hljs-comment">// otherwise settle to closest expanded state.</span>
+                        <span class="hljs-keyword">if</span> ((Math.abs(xvel) &lt; Math.abs(yvel) &amp;&amp; yvel &gt; SIGNIFICANT_VEL_THRESHOLD)
+                                || releasedLow(releasedChild)) &#123;
+                            top = parentHeight;
+                            targetState = STATE_HIDDEN;
+                        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fitToContents) &#123;
+                            top = fitToContentsOffset;
+                            targetState = STATE_EXPANDED;
+                        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (Math.abs(releasedChild.getTop() - expandedOffset)
+                                &lt; Math.abs(releasedChild.getTop() - halfExpandedOffset)) &#123;
+                            top = expandedOffset;
+                            targetState = STATE_EXPANDED;
+                        &#125; <span class="hljs-keyword">else</span> &#123;
+                            top = halfExpandedOffset;
+                            targetState = STATE_HALF_EXPANDED;
+                        &#125;
+                    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (yvel == <span class="hljs-number">0.f</span> || Math.abs(xvel) &gt; Math.abs(yvel)) &#123;
+                        <span class="hljs-comment">// If the Y velocity is 0 or the swipe was mostly horizontal indicated by the X velocity</span>
+                        <span class="hljs-comment">// being greater than the Y velocity, settle to the nearest correct height.</span>
+                        <span class="hljs-keyword">int</span> currentTop = releasedChild.getTop();
+                        <span class="hljs-keyword">if</span> (fitToContents) &#123;
+                            <span class="hljs-keyword">if</span> (Math.abs(currentTop - fitToContentsOffset)
+                                    &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                                top = fitToContentsOffset;
+                                targetState = STATE_EXPANDED;
+                            &#125; <span class="hljs-keyword">else</span> &#123;
+                                top = collapsedOffset;
+                                targetState = STATE_COLLAPSED;
+                            &#125;
+                        &#125; <span class="hljs-keyword">else</span> &#123;
+                            <span class="hljs-keyword">if</span> (currentTop &lt; halfExpandedOffset) &#123;
+                                <span class="hljs-keyword">if</span> (currentTop &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                                    top = expandedOffset;
+                                    targetState = STATE_EXPANDED;
+                                &#125; <span class="hljs-keyword">else</span> &#123;
+                                    top = halfExpandedOffset;
+                                    targetState = STATE_HALF_EXPANDED;
+                                &#125;
+                            &#125; <span class="hljs-keyword">else</span> &#123;
+                                <span class="hljs-keyword">if</span> (Math.abs(currentTop - halfExpandedOffset)
+                                        &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                                    top = halfExpandedOffset;
+                                    targetState = STATE_HALF_EXPANDED;
+                                &#125; <span class="hljs-keyword">else</span> &#123;
+                                    top = collapsedOffset;
+                                    targetState = STATE_COLLAPSED;
+                                &#125;
+                            &#125;
+                        &#125;
+                    &#125; <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// Moving Down</span>
+                        <span class="hljs-keyword">if</span> (fitToContents) &#123;
+                            top = collapsedOffset;
+                            targetState = STATE_COLLAPSED;
+                        &#125; <span class="hljs-keyword">else</span> &#123;
+                            <span class="hljs-comment">// Settle to the nearest correct height.</span>
+                            <span class="hljs-keyword">int</span> currentTop = releasedChild.getTop();
+                            <span class="hljs-keyword">if</span> (Math.abs(currentTop - halfExpandedOffset)
+                                    &lt; Math.abs(currentTop - collapsedOffset)) &#123;
+                                top = halfExpandedOffset;
+                                targetState = STATE_HALF_EXPANDED;
+                            &#125; <span class="hljs-keyword">else</span> &#123;
+                                top = collapsedOffset;
+                                targetState = STATE_COLLAPSED;
+                            &#125;
+                        &#125;
+                    &#125;
+                    startSettlingAnimation(releasedChild, targetState, top, <span class="hljs-keyword">true</span>);
+                &#125;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">clampViewPositionVertical</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View child, <span class="hljs-keyword">int</span> top, <span class="hljs-keyword">int</span> dy)</span> </span>&#123;
+                    <span class="hljs-keyword">return</span> MathUtils.clamp(
+                            top, getExpandedOffset(), hideable ? parentHeight : collapsedOffset);
+                &#125;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">clampViewPositionHorizontal</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View child, <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> dx)</span> </span>&#123;
+                    <span class="hljs-keyword">return</span> child.getLeft();
+                &#125;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getViewVerticalDragRange</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View child)</span> </span>&#123;
+                    <span class="hljs-keyword">if</span> (hideable) &#123;
+                        <span class="hljs-keyword">return</span> parentHeight;
+                    &#125; <span class="hljs-keyword">else</span> &#123;
+                        <span class="hljs-keyword">return</span> collapsedOffset;
+                    &#125;
+                &#125;
+            &#125;;
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dispatchOnSlide</span><span class="hljs-params">(<span class="hljs-keyword">int</span> top)</span> </span>&#123;
+        View bottomSheet = viewRef.get();
+        <span class="hljs-keyword">if</span> (bottomSheet != <span class="hljs-keyword">null</span> &amp;&amp; !callbacks.isEmpty()) &#123;
+            <span class="hljs-keyword">float</span> slideOffset =
+                    (top &gt; collapsedOffset || collapsedOffset == getExpandedOffset())
+                            ? (<span class="hljs-keyword">float</span>) (collapsedOffset - top) / (parentHeight - collapsedOffset)
+                            : (<span class="hljs-keyword">float</span>) (collapsedOffset - top) / (collapsedOffset - getExpandedOffset());
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; callbacks.size(); i++) &#123;
+                callbacks.get(i).onSlide(bottomSheet, slideOffset);
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-meta">@VisibleForTesting</span>
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getPeekHeightMin</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> peekHeightMin;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Disables the shaped corner &#123;<span class="hljs-doctag">@link</span> ShapeAppearanceModel&#125; interpolation transition animations.</span>
+<span class="hljs-comment">     * Will have no effect unless the sheet utilizes a &#123;<span class="hljs-doctag">@link</span> MaterialShapeDrawable&#125; with set shape</span>
+<span class="hljs-comment">     * theming properties. Only For use in UI testing.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@hide</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@RestrictTo(LIBRARY_GROUP)</span>
+    <span class="hljs-meta">@VisibleForTesting</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">disableShapeAnimations</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-comment">// Sets the shape value animator to null, prevents animations from occuring during testing.</span>
+        interpolatorAnimator = <span class="hljs-keyword">null</span>;
+    &#125;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SettleRunnable</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Runnable</span> </span>&#123;
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> View view;
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> isPosted;
+
+        <span class="hljs-meta">@State</span>
+        <span class="hljs-keyword">int</span> targetState;
+
+        SettleRunnable(View view, <span class="hljs-meta">@State</span> <span class="hljs-keyword">int</span> targetState) &#123;
+            <span class="hljs-keyword">this</span>.view = view;
+            <span class="hljs-keyword">this</span>.targetState = targetState;
+        &#125;
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+            <span class="hljs-keyword">if</span> (viewDragHelper != <span class="hljs-keyword">null</span> &amp;&amp; viewDragHelper.continueSettling(<span class="hljs-keyword">true</span>)) &#123;
+                ViewCompat.postOnAnimation(view, <span class="hljs-keyword">this</span>);
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                setStateInternal(targetState);
+            &#125;
+            <span class="hljs-keyword">this</span>.isPosted = <span class="hljs-keyword">false</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * State persisted across instances</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SavedState</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbsSavedState</span> </span>&#123;
+        <span class="hljs-meta">@State</span>
+        <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> state;
+        <span class="hljs-keyword">int</span> peekHeight;
+        <span class="hljs-keyword">boolean</span> fitToContents;
+        <span class="hljs-keyword">boolean</span> hideable;
+        <span class="hljs-keyword">boolean</span> skipCollapsed;
+
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SavedState</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Parcel source)</span> </span>&#123;
+            <span class="hljs-keyword">this</span>(source, <span class="hljs-keyword">null</span>);
+        &#125;
+
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SavedState</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Parcel source, ClassLoader loader)</span> </span>&#123;
+            <span class="hljs-keyword">super</span>(source, loader);
+            <span class="hljs-comment">//noinspection ResourceType</span>
+            state = source.readInt();
+            peekHeight = source.readInt();
+            fitToContents = source.readInt() == <span class="hljs-number">1</span>;
+            hideable = source.readInt() == <span class="hljs-number">1</span>;
+            skipCollapsed = source.readInt() == <span class="hljs-number">1</span>;
+        &#125;
+
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SavedState</span><span class="hljs-params">(Parcelable superState, <span class="hljs-meta">@NonNull</span> MyViewPagerBottomSheetBehavior&lt;?&gt; behavior)</span> </span>&#123;
+            <span class="hljs-keyword">super</span>(superState);
+            <span class="hljs-keyword">this</span>.state = behavior.getState();
+            <span class="hljs-keyword">this</span>.peekHeight = behavior.getPeekHeight();
+            <span class="hljs-keyword">this</span>.fitToContents = behavior.isFitToContents();
+            <span class="hljs-keyword">this</span>.hideable = behavior.isHideable();
+            <span class="hljs-keyword">this</span>.skipCollapsed = behavior.getSkipCollapsed();
+        &#125;
+
+
+        <span class="hljs-meta">@Deprecated</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SavedState</span><span class="hljs-params">(Parcelable superstate, <span class="hljs-keyword">int</span> state)</span> </span>&#123;
+            <span class="hljs-keyword">super</span>(superstate);
+            <span class="hljs-keyword">this</span>.state = state;
+        &#125;
+
+
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">writeToParcel</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Parcel out, <span class="hljs-keyword">int</span> flags)</span> </span>&#123;
+            <span class="hljs-keyword">super</span>.writeToParcel(out, flags);
+            out.writeInt(state);
+            out.writeInt(peekHeight);
+            out.writeInt(fitToContents ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
+            out.writeInt(hideable ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
+            out.writeInt(skipCollapsed ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
+        &#125;
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Creator&lt;SavedState&gt; CREATOR =
+                <span class="hljs-keyword">new</span> ClassLoaderCreator&lt;SavedState&gt;() &#123;
+                    <span class="hljs-meta">@NonNull</span>
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-function"><span class="hljs-keyword">public</span> SavedState <span class="hljs-title">createFromParcel</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Parcel in, ClassLoader loader)</span> </span>&#123;
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SavedState(in, loader);
+                    &#125;
+
+                    <span class="hljs-meta">@Nullable</span>
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-function"><span class="hljs-keyword">public</span> SavedState <span class="hljs-title">createFromParcel</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Parcel in)</span> </span>&#123;
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SavedState(in, <span class="hljs-keyword">null</span>);
+                    &#125;
+
+                    <span class="hljs-meta">@NonNull</span>
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-keyword">public</span> SavedState[] newArray(<span class="hljs-keyword">int</span> size) &#123;
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SavedState[size];
+                    &#125;
+                &#125;;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * A utility function to get the &#123;<span class="hljs-doctag">@link</span> BottomSheetBehavior&#125; associated with the &#123;<span class="hljs-doctag">@code</span> view&#125;.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> view The &#123;<span class="hljs-doctag">@link</span> View&#125; with &#123;<span class="hljs-doctag">@link</span> BottomSheetBehavior&#125;.</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> The &#123;<span class="hljs-doctag">@link</span> BottomSheetBehavior&#125; associated with the &#123;<span class="hljs-doctag">@code</span> view&#125;.</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@NonNull</span>
+    <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;V extends View&gt; <span class="hljs-function">MyViewPagerBottomSheetBehavior&lt;V&gt; <span class="hljs-title">from</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> V view)</span> </span>&#123;
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        <span class="hljs-keyword">if</span> (!(params <span class="hljs-keyword">instanceof</span> CoordinatorLayout.LayoutParams)) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;The view is not a child of CoordinatorLayout&quot;</span>);
+        &#125;
+        CoordinatorLayout.Behavior&lt;?&gt; behavior =
+                ((CoordinatorLayout.LayoutParams) params).getBehavior();
+        <span class="hljs-keyword">if</span> (!(behavior <span class="hljs-keyword">instanceof</span> MyViewPagerBottomSheetBehavior)) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;The view is not associated with BottomSheetBehavior&quot;</span>);
+        &#125;
+        <span class="hljs-keyword">return</span> (MyViewPagerBottomSheetBehavior&lt;V&gt;) behavior;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Sets whether the BottomSheet should update the accessibility status of its &#123;<span class="hljs-doctag">@link</span></span>
+<span class="hljs-comment">     * CoordinatorLayout&#125; siblings when expanded.</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * &lt;p&gt;Set this to true if the expanded state of the sheet blocks access to siblings (e.g., when</span>
+<span class="hljs-comment">     * the sheet expands over the full screen).</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setUpdateImportantForAccessibilityOnSiblings</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            <span class="hljs-keyword">boolean</span> updateImportantForAccessibilityOnSiblings)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.updateImportantForAccessibilityOnSiblings = updateImportantForAccessibilityOnSiblings;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">updateImportantForAccessibility</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> expanded)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (viewRef == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        ViewParent viewParent = viewRef.get().getParent();
+        <span class="hljs-keyword">if</span> (!(viewParent <span class="hljs-keyword">instanceof</span> CoordinatorLayout)) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        CoordinatorLayout parent = (CoordinatorLayout) viewParent;
+        <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> childCount = parent.getChildCount();
+        <span class="hljs-keyword">if</span> ((Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.JELLY_BEAN) &amp;&amp; expanded) &#123;
+            <span class="hljs-keyword">if</span> (importantForAccessibilityMap == <span class="hljs-keyword">null</span>) &#123;
+                importantForAccessibilityMap = <span class="hljs-keyword">new</span> HashMap&lt;&gt;(childCount);
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-comment">// The important for accessibility values of the child views have been saved already.</span>
+                <span class="hljs-keyword">return</span>;
+            &#125;
+        &#125;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; childCount; i++) &#123;
+            <span class="hljs-keyword">final</span> View child = parent.getChildAt(i);
+            <span class="hljs-keyword">if</span> (child == viewRef.get()) &#123;
+                <span class="hljs-keyword">continue</span>;
+            &#125;
+
+            <span class="hljs-keyword">if</span> (expanded) &#123;
+                <span class="hljs-comment">// Saves the important for accessibility value of the child view.</span>
+                <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.JELLY_BEAN) &#123;
+                    importantForAccessibilityMap.put(child, child.getImportantForAccessibility());
+                &#125;
+                <span class="hljs-keyword">if</span> (updateImportantForAccessibilityOnSiblings) &#123;
+                    ViewCompat.setImportantForAccessibility(
+                            child, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+                &#125;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-keyword">if</span> (updateImportantForAccessibilityOnSiblings
+                        &amp;&amp; importantForAccessibilityMap != <span class="hljs-keyword">null</span>
+                        &amp;&amp; importantForAccessibilityMap.containsKey(child)) &#123;
+                    <span class="hljs-comment">// Restores the original important for accessibility value of the child view.</span>
+                    ViewCompat.setImportantForAccessibility(child, importantForAccessibilityMap.get(child));
+                &#125;
+            &#125;
+        &#125;
+
+        <span class="hljs-keyword">if</span> (!expanded) &#123;
+            importantForAccessibilityMap = <span class="hljs-keyword">null</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">updateAccessibilityActions</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (viewRef == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        V child = viewRef.get();
+        <span class="hljs-keyword">if</span> (child == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        ViewCompat.removeAccessibilityAction(child, AccessibilityNodeInfoCompat.ACTION_COLLAPSE);
+        ViewCompat.removeAccessibilityAction(child, AccessibilityNodeInfoCompat.ACTION_EXPAND);
+        ViewCompat.removeAccessibilityAction(child, AccessibilityNodeInfoCompat.ACTION_DISMISS);
+
+        <span class="hljs-keyword">if</span> (hideable &amp;&amp; state != STATE_HIDDEN) &#123;
+            addAccessibilityActionForState(child, AccessibilityActionCompat.ACTION_DISMISS, STATE_HIDDEN);
+        &#125;
+
+        <span class="hljs-keyword">switch</span> (state) &#123;
+            <span class="hljs-keyword">case</span> STATE_EXPANDED: &#123;
+                <span class="hljs-keyword">int</span> nextState = fitToContents ? STATE_COLLAPSED : STATE_HALF_EXPANDED;
+                addAccessibilityActionForState(
+                        child, AccessibilityActionCompat.ACTION_COLLAPSE, nextState);
+                <span class="hljs-keyword">break</span>;
+            &#125;
+            <span class="hljs-keyword">case</span> STATE_HALF_EXPANDED: &#123;
+                addAccessibilityActionForState(
+                        child, AccessibilityActionCompat.ACTION_COLLAPSE, STATE_COLLAPSED);
+                addAccessibilityActionForState(
+                        child, AccessibilityActionCompat.ACTION_EXPAND, STATE_EXPANDED);
+                <span class="hljs-keyword">break</span>;
+            &#125;
+            <span class="hljs-keyword">case</span> STATE_COLLAPSED: &#123;
+                <span class="hljs-keyword">int</span> nextState = fitToContents ? STATE_EXPANDED : STATE_HALF_EXPANDED;
+                addAccessibilityActionForState(child, AccessibilityActionCompat.ACTION_EXPAND, nextState);
+                <span class="hljs-keyword">break</span>;
+            &#125;
+            <span class="hljs-keyword">default</span>: <span class="hljs-comment">// fall out</span>
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addAccessibilityActionForState</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            V child, AccessibilityActionCompat action, <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> state)</span> </span>&#123;
+        ViewCompat.replaceAccessibilityAction(
+                child,
+                action,
+                <span class="hljs-keyword">null</span>,
+                <span class="hljs-keyword">new</span> AccessibilityViewCommand() &#123;
+                    <span class="hljs-meta">@Override</span>
+                    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">perform</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> View view, <span class="hljs-meta">@Nullable</span> CommandArguments arguments)</span> </span>&#123;
+                        setState(state);
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+                    &#125;
+                &#125;);
+    &#125;
+&#125;
+</code></pre>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/Blog/categories/%E8%87%AA%E5%AE%9A%E4%B9%89View/">自定义View</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/Blog/2020/11/27/%E9%AB%98%E6%95%88%E5%8A%A0%E8%BD%BDBitMap/">
+                        <span class="hidden-mobile">高效加载BitMap</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>安卓学弟 </span></a> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>ZEKI</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/Blog/js/debouncer.js" ></script>
+<script  src="/Blog/js/events.js" ></script>
+<script  src="/Blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/Blog/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/Blog/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/Blog/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/Blog/js/boot.js" ></script>
+
+
+
+</body>
+</html>
